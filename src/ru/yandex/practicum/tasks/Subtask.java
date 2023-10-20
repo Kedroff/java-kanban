@@ -19,7 +19,7 @@ public class Subtask extends ru.yandex.practicum.tasks.Task {
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                '}'+ "\n";
+                '}' + "\n";
     }
 
     public int getEpicId() {

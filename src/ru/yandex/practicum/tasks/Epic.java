@@ -36,7 +36,7 @@ public class Epic extends ru.yandex.practicum.tasks.Task {
         return subtasksIds;
     }
 
-    public void addSubtasksIds(int subtaskId){
+    public void addSubtasksIds(int subtaskId) {
         subtasksIds.add(subtaskId);
     }
 
@@ -49,4 +49,9 @@ public class Epic extends ru.yandex.practicum.tasks.Task {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public void cleanArraySubtasks() {
+        subtasksIds.clear();
+    }
+
 }

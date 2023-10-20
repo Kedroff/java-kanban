@@ -13,16 +13,22 @@ public class Manager {
     HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     HashMap<Integer, Task> taskHashMap = new HashMap<>();
 
-    public HashMap<Integer, Task> printTask() {
-        return taskHashMap;
+    public ArrayList<Task> printTask() {                 // С методами Print попробовал по разному возвращать
+        ArrayList<Task> task = new ArrayList<>();        // списки задач
+        task.addAll(taskHashMap.values());
+        return task;
     }
 
-    public HashMap<Integer, Subtask> printSubtask() {
-        return subtaskHashMap;
+    public ArrayList<Subtask> printSubtask() {
+        ArrayList<Subtask> subtask = new ArrayList<>();
+        for (Subtask subtask1 : subtaskHashMap.values()) {
+            subtask.add(subtask1);
+        }
+        return subtask;
     }
 
-    public HashMap<Integer, Epic> printEpic() {
-        return epicHashMap;
+    public ArrayList<Epic> printEpic() {
+        return new ArrayList<>(epicHashMap.values());
     }
 
     public void deleteTask() {
@@ -31,10 +37,14 @@ public class Manager {
 
     public void deleteSubtask() {
         subtaskHashMap.clear();
+        for (Epic epic : epicHashMap.values()) {
+            epic.cleanArraySubtasks();
+        }
     }
 
-    public void deleteEpic() {
-        epicHashMap.clear();
+    public void deleteEpic() {                  // Ростислав, у нас по сути при удалении эпика удаляются и все сабтаски
+        epicHashMap.clear();                    // Поэтому я думаю можно вызвать метод удаления всех сабтасок
+        deleteSubtask();
     }
 
     public Task getTaskByIdentify(int id) {
@@ -98,11 +108,13 @@ public class Manager {
         updateEpicStatus(savedEpic);
     }
 
-    public void updateEpic(Epic epic) {
-        Epic savedEpic = epicHashMap.get(epic.getId());
-        if (savedEpic == null) {
+    public void updateEpic(Epic epic) {                         // Ростислав, не совсем понял про создание нового Эпика
+        Epic savedEpic = epicHashMap.get(epic.getId());         // Я же вроде как создаю savedEpic и получаю в него
+        if (savedEpic == null) {                                // данные из передаваемого :(
             return;
         }
+        savedEpic.setName(epic.getName());                      // Может вы это имели ввиду?
+        savedEpic.setDescription(epic.getDescription());
         epicHashMap.put(epic.getId(), savedEpic);
     }
 
@@ -147,8 +159,25 @@ public class Manager {
     }
 
     public void deleteSubtaskByIdentify(int id) {
-        if (subtaskHashMap.containsKey(id)) {
+        Subtask subtask = subtaskHashMap.get(id);
+
+        if (subtask != null) {
+            int epicIdInSub = subtask.getEpicId();
+            Epic epic = null;
+
             subtaskHashMap.remove(id);
+
+            for (Epic value : epicHashMap.values()) {
+                if (value.getEpicId() == epicIdInSub) {
+                    epic = value;
+                    break;
+                }
+            }
+            if (epic != null) {
+                ArrayList<Integer> ids = epic.getSubtasksIds();
+                ids.remove(Integer.valueOf(id));
+            }
+
         }
     }
 

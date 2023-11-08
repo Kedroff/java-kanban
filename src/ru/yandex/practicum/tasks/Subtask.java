@@ -1,13 +1,15 @@
 package ru.yandex.practicum.tasks;
 
+import ru.yandex.practicum.manager.Status;
+
 public class Subtask extends ru.yandex.practicum.tasks.Task {
-    private String status;
+    private Status status;
     private int epicId;
 
     public Subtask(String name, String description, int epicId) {
         super(name, description);
         this.epicId = epicId;
-        this.status = "NEW";
+        this.status = Status.NEW;
     }
 
 
@@ -32,11 +34,21 @@ public class Subtask extends ru.yandex.practicum.tasks.Task {
 
     @Override
     public void setStatus(String status) {
-        this.status = status;
+        switch (Status.valueOf(status)){
+            case NEW:
+                this.status = Status.NEW;
+                break;
+            case IN_PROGRESS:
+                this.status = Status.IN_PROGRESS;
+                break;
+            case DONE:
+                this.status = Status.DONE;
+                break;
+        }
     }
 
     @Override
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 }

@@ -6,19 +6,24 @@ import ru.yandex.practicum.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class Manager {
+public class InMemoryTaskManager implements TaskManager {
     private int generatedIds = 0;
     HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     HashMap<Integer, Task> taskHashMap = new HashMap<>();
+    HistoryManager historyManager = Managers.getDefaultHistory();
 
-    public ArrayList<Task> printTask() {                 // С методами Print попробовал по разному возвращать
-        ArrayList<Task> task = new ArrayList<>();        // списки задач
+
+    @Override
+    public ArrayList<Task> printTask() {
+        ArrayList<Task> task = new ArrayList<>();
         task.addAll(taskHashMap.values());
         return task;
     }
 
+    @Override
     public ArrayList<Subtask> printSubtask() {
         ArrayList<Subtask> subtask = new ArrayList<>();
         for (Subtask subtask1 : subtaskHashMap.values()) {
@@ -27,14 +32,17 @@ public class Manager {
         return subtask;
     }
 
+    @Override
     public ArrayList<Epic> printEpic() {
         return new ArrayList<>(epicHashMap.values());
     }
 
+    @Override
     public void deleteTask() {
         taskHashMap.clear();
     }
 
+    @Override
     public void deleteSubtask() {
         subtaskHashMap.clear();
         for (Epic epic : epicHashMap.values()) {
@@ -42,23 +50,34 @@ public class Manager {
         }
     }
 
-    public void deleteEpic() {                  // Ростислав, у нас по сути при удалении эпика удаляются и все сабтаски
-        epicHashMap.clear();                    // Поэтому я думаю можно вызвать метод удаления всех сабтасок
+    @Override
+    public void deleteEpic() {
+        epicHashMap.clear();
         deleteSubtask();
     }
 
+    @Override
     public Task getTaskByIdentify(int id) {
+        Task task = taskHashMap.get(id);
+        historyManager.add(task);
         return taskHashMap.get(id);
     }
 
+    @Override
     public Subtask getSubtaskByIdentify(int id) {
+        Subtask subtask = subtaskHashMap.get(id);
+        historyManager.add(subtask);
         return subtaskHashMap.get(id);
     }
 
+    @Override
     public Epic getEpicByIdentify(int id) {
+        Epic epic = epicHashMap.get(id);
+        historyManager.add(epic);
         return epicHashMap.get(id);
     }
 
+    @Override
     public int generateTask(Task task) {
         int taskId = generateId();
         task.setId(taskId);
@@ -66,6 +85,7 @@ public class Manager {
         return taskId;
     }
 
+    @Override
     public int generateEpic(Epic epic) {
         int epicId = generateId();
         epic.setEpicId(epicId);
@@ -73,6 +93,7 @@ public class Manager {
         return epicId;
     }
 
+    @Override
     public Integer generateSubtask(Subtask subtask) {
         Epic epic = epicHashMap.get(subtask.getEpicId());
 
@@ -86,6 +107,7 @@ public class Manager {
         return subtaskId;
     }
 
+    @Override
     public void updateTask(Task task) {
         Task savedTask = taskHashMap.get(task.getId());
         if (savedTask == null) {
@@ -95,6 +117,7 @@ public class Manager {
 
     }
 
+    @Override
     public void updateSubtask(Subtask subtask) {
         Subtask savedSubtask = subtaskHashMap.get(subtask.getId());
         if (savedSubtask == null) {
@@ -108,16 +131,18 @@ public class Manager {
         updateEpicStatus(savedEpic);
     }
 
-    public void updateEpic(Epic epic) {                         // Ростислав, не совсем понял про создание нового Эпика
-        Epic savedEpic = epicHashMap.get(epic.getId());         // Я же вроде как создаю savedEpic и получаю в него
-        if (savedEpic == null) {                                // данные из передаваемого :(
+    @Override
+    public void updateEpic(Epic epic) {
+        Epic savedEpic = epicHashMap.get(epic.getId());
+        if (savedEpic == null) {
             return;
         }
-        savedEpic.setName(epic.getName());                      // Может вы это имели ввиду?
+        savedEpic.setName(epic.getName());
         savedEpic.setDescription(epic.getDescription());
         epicHashMap.put(epic.getId(), savedEpic);
     }
 
+    @Override
     public void updateEpicStatus(Epic epic) {
         ArrayList<Integer> subtasksIds = epic.getSubtasksIds();
         if (subtasksIds.isEmpty()) {
@@ -125,7 +150,7 @@ public class Manager {
             return;
         }
 
-        String status = null;
+        Status status = null;
         for (Integer subtaskId : subtasksIds) {
             Subtask sub = subtaskHashMap.get(subtaskId);
 
@@ -137,27 +162,31 @@ public class Manager {
             if (status.equals(sub.getStatus()) && !status.equals("IN_PROGRESS")) {
                 continue;
             }
-            status = "IN_PROGRESS";
+            status = Status.IN_PROGRESS;
         }
-        epic.setStatus(status);
+        epic.setStatus("NEW");
     }
 
+    @Override
     public void updateTaskStatus(Task task, String status) {
         task.setStatus(status);
     }
 
+    @Override
     public void updateSubtaskStatus(Subtask subtask, String status) {
         subtask.setStatus(status);
         Epic epic = epicHashMap.get(subtask.getEpicId());
         updateEpicStatus(epic);
     }
 
+    @Override
     public void deleteTaskByIdentify(int id) {
         if (taskHashMap.containsKey(id)) {
             taskHashMap.remove(id);
         }
     }
 
+    @Override
     public void deleteSubtaskByIdentify(int id) {
         Subtask subtask = subtaskHashMap.get(id);
 
@@ -181,6 +210,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void deleteEpicByIdentify(int id) {
         if (epicHashMap.containsKey(id)) {
             epicHashMap.remove(id);
@@ -200,8 +230,14 @@ public class Manager {
 
     }
 
+    @Override
     public int generateId() {
         generatedIds++;
         return generatedIds;
     }
+
+    public List<Task> getHistory(){
+       return historyManager.getHistory();
+    }
+
 }

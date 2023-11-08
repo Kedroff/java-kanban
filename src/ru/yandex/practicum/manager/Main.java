@@ -3,10 +3,11 @@ package ru.yandex.practicum.manager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         Task task1 = new Task("Покормить кота", "Кормить влажным кормом");
         manager.generateTask(task1);
@@ -31,5 +32,26 @@ public class Main {
         Subtask subtask3 = new Subtask("Уборка", "Мытье полов", epicId2);
         manager.generateSubtask(subtask3);
 
+        System.out.println(manager.printEpic());
+        System.out.println(manager.printTask());
+        System.out.println(manager.printSubtask());
+
+        manager.getSubtaskByIdentify(5);// 1
+        manager.getSubtaskByIdentify(5);
+        manager.getEpicByIdentify(3);
+        manager.getEpicByIdentify(3);
+        manager.getEpicByIdentify(3);
+        manager.getEpicByIdentify(3);
+        manager.getEpicByIdentify(3);
+        manager.getEpicByIdentify(3);
+        manager.getEpicByIdentify(3);
+        manager.getSubtaskByIdentify(5); // 10
+        manager.getEpicByIdentify(3);
+
+
+
+
+        List<Task> listTask= manager.getHistory();
+        System.out.println(listTask);
     }
 }

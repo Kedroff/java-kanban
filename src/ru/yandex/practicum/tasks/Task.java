@@ -1,15 +1,17 @@
 package ru.yandex.practicum.tasks;
 
+import ru.yandex.practicum.manager.Status;
+
 public class Task {
     protected int id;
     protected String name;
     protected String description;
-    protected String status;
+    protected Status status;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.status = "NEW";
+        this.status = Status.NEW;
     }
 
     public int getId() {
@@ -36,12 +38,22 @@ public class Task {
         this.description = description;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        switch (Status.valueOf(status)){
+            case NEW:
+                this.status = Status.NEW;
+                break;
+            case IN_PROGRESS:
+                this.status = Status.IN_PROGRESS;
+                break;
+            case DONE:
+                this.status = Status.DONE;
+                break;
+        }
     }
 
     @Override

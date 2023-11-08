@@ -1,9 +1,11 @@
 package ru.yandex.practicum.tasks;
 
+import ru.yandex.practicum.manager.Status;
+
 import java.util.ArrayList;
 
 public class Epic extends ru.yandex.practicum.tasks.Task {
-    private String status;
+    private Status status;
     ArrayList<Integer> subtasksIds;
 
     private int epicId;
@@ -11,7 +13,7 @@ public class Epic extends ru.yandex.practicum.tasks.Task {
     public Epic(String name, String description) {
         super(name, description);
         subtasksIds = new ArrayList<>();
-        this.status = "NEW";
+        this.status = Status.NEW;
     }
 
     public int getEpicId() {
@@ -41,13 +43,23 @@ public class Epic extends ru.yandex.practicum.tasks.Task {
     }
 
     @Override
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
     @Override
     public void setStatus(String status) {
-        this.status = status;
+        switch (Status.valueOf(status)){
+            case NEW:
+                this.status = Status.NEW;
+                break;
+            case IN_PROGRESS:
+                this.status = Status.IN_PROGRESS;
+                break;
+            case DONE:
+                this.status = Status.DONE;
+                break;
+        }
     }
 
     public void cleanArraySubtasks() {

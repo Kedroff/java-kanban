@@ -7,35 +7,14 @@ import ru.yandex.practicum.tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private int generatedIds = 0;
-    HashMap<Integer, Epic> epicHashMap = new HashMap<>();
-    HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
-    HashMap<Integer, Task> taskHashMap = new HashMap<>();
-    HistoryManager historyManager = Managers.getDefaultHistory();
-
-
-    @Override
-    public ArrayList<Task> printTask() {
-        ArrayList<Task> task = new ArrayList<>();
-        task.addAll(taskHashMap.values());
-        return task;
-    }
-
-    @Override
-    public ArrayList<Subtask> printSubtask() {
-        ArrayList<Subtask> subtask = new ArrayList<>();
-        for (Subtask subtask1 : subtaskHashMap.values()) {
-            subtask.add(subtask1);
-        }
-        return subtask;
-    }
-
-    @Override
-    public ArrayList<Epic> printEpic() {
-        return new ArrayList<>(epicHashMap.values());
-    }
+    private Map<Integer, Epic> epicHashMap = new HashMap<>();
+    private Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
+    private Map<Integer, Task> taskHashMap = new HashMap<>();
+    private HistoryManager historyManager = Managers.getDefaultHistory();  // инкапсулировал все поля в private
 
     @Override
     public void deleteTask() {
@@ -59,22 +38,22 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskByIdentify(int id) {
         Task task = taskHashMap.get(id);
-        historyManager.add(task);
-        return taskHashMap.get(id);
+        historyManager.add(task);               // добавил проверку в методе add
+        return task;                            // не обращаюсь больше к мапе, а возвращаю сам объект
     }
 
     @Override
     public Subtask getSubtaskByIdentify(int id) {
         Subtask subtask = subtaskHashMap.get(id);
         historyManager.add(subtask);
-        return subtaskHashMap.get(id);
+        return subtask;
     }
 
     @Override
     public Epic getEpicByIdentify(int id) {
         Epic epic = epicHashMap.get(id);
         historyManager.add(epic);
-        return epicHashMap.get(id);
+        return epic;
     }
 
     @Override
@@ -236,8 +215,9 @@ public class InMemoryTaskManager implements TaskManager {
         return generatedIds;
     }
 
-    public List<Task> getHistory(){
-       return historyManager.getHistory();
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
 }

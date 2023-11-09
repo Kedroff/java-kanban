@@ -1,5 +1,7 @@
-package ru.yandex.practicum.manager;
+package ru.yandex.practicum;
 
+import ru.yandex.practicum.manager.Managers;
+import ru.yandex.practicum.manager.TaskManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
@@ -7,7 +9,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        TaskManager manager = Managers.getDefault();
 
         Task task1 = new Task("Покормить кота", "Кормить влажным кормом");
         manager.generateTask(task1);
@@ -32,9 +34,6 @@ public class Main {
         Subtask subtask3 = new Subtask("Уборка", "Мытье полов", epicId2);
         manager.generateSubtask(subtask3);
 
-        System.out.println(manager.printEpic());
-        System.out.println(manager.printTask());
-        System.out.println(manager.printSubtask());
 
         manager.getSubtaskByIdentify(5);// 1
         manager.getSubtaskByIdentify(5);
@@ -51,7 +50,7 @@ public class Main {
 
 
 
-        List<Task> listTask= manager.getHistory();
+        List<Task> listTask = manager.getHistory();
         System.out.println(listTask);
     }
 }

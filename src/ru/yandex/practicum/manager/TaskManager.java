@@ -8,13 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-
-    public ArrayList<Task> printTask();
-
-    public ArrayList<Subtask> printSubtask();
-
-    public ArrayList<Epic> printEpic();
-
     public void deleteTask();
 
     public void deleteSubtask();
@@ -52,4 +45,6 @@ public interface TaskManager {
     public void deleteEpicByIdentify(int id);
 
     public int generateId();
+
+    List<Task> getHistory();
 }

@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> epicHashMap = new HashMap<>();
     private Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
     private Map<Integer, Task> taskHashMap = new HashMap<>();
-    private HistoryManager historyManager = Managers.getDefaultHistory();  // инкапсулировал все поля в private
+    private HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public void deleteTask() {
@@ -38,8 +38,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskByIdentify(int id) {
         Task task = taskHashMap.get(id);
-        historyManager.add(task);               // добавил проверку в методе add
-        return task;                            // не обращаюсь больше к мапе, а возвращаю сам объект
+        historyManager.add(task);
+        return task;
     }
 
     @Override

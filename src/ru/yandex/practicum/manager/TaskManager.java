@@ -8,43 +8,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-    public void deleteTask();
+     void deleteTask();
 
-    public void deleteSubtask();
+     void deleteSubtask();
 
-    public void deleteEpic();
+     void deleteEpic();
 
-    public Task getTaskByIdentify(int id);
+     Task getTaskByIdentify(int id);
 
-    public Subtask getSubtaskByIdentify(int id);
+     Subtask getSubtaskByIdentify(int id);
 
-    public Epic getEpicByIdentify(int id);
+     Epic getEpicByIdentify(int id);
 
-    public int generateTask(Task task);
+     int generateTask(Task task);
 
-    public int generateEpic(Epic epic);
+     int generateEpic(Epic epic);
 
-    public Integer generateSubtask(Subtask subtask);
+     Integer generateSubtask(Subtask subtask);
 
-    public void updateTask(Task task);
+     void updateTask(Task task);
 
-    public void updateSubtask(Subtask subtask);
+     void updateSubtask(Subtask subtask);
 
-    public void updateEpic(Epic epic);
+     void updateEpic(Epic epic);
 
-    public void updateEpicStatus(Epic epic);
+     void updateEpicStatus(Epic epic);
 
-    public void updateTaskStatus(Task task, String status);
+     void updateTaskStatus(Task task, String status);
 
-    public void updateSubtaskStatus(Subtask subtask, String status);
+    void updateSubtaskStatus(Subtask subtask, String status);
 
-    public void deleteTaskByIdentify(int id);
+     void deleteTaskByIdentify(int id);
 
-    public void deleteSubtaskByIdentify(int id);
+     void deleteSubtaskByIdentify(int id);
 
-    public void deleteEpicByIdentify(int id);
+     void deleteEpicByIdentify(int id);
 
-    public int generateId();
+     int generateId();
 
     List<Task> getHistory();
 }

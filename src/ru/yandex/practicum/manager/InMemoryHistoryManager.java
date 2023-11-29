@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
     Map<Integer,Node> historyHash = new HashMap<>();
-    private Node head;
-    private Node tail;
+    private Node head = null;
+    private Node tail = null;
 
 
     @Override

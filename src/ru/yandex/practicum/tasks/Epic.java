@@ -1,11 +1,13 @@
 package ru.yandex.practicum.tasks;
 
 import ru.yandex.practicum.manager.Status;
+import ru.yandex.practicum.manager.TaskType;
 
 import java.util.ArrayList;
 
 public class Epic extends ru.yandex.practicum.tasks.Task {
     private Status status;
+    private TaskType type;
     ArrayList<Integer> subtasksIds;
 
     private int epicId;
@@ -14,6 +16,15 @@ public class Epic extends ru.yandex.practicum.tasks.Task {
         super(name, description);
         subtasksIds = new ArrayList<>();
         this.status = Status.NEW;
+        this.type = TaskType.EPIC;
+    }
+    @Override
+    public int getId() {
+        return id;
+    }
+    @Override
+    public TaskType getType() {
+        return type;
     }
 
     public int getEpicId() {
@@ -27,10 +38,10 @@ public class Epic extends ru.yandex.practicum.tasks.Task {
     @Override
     public String toString() {
         return "Epic{" +
-                "status='" + status + '\'' +
-                ", id=" + epicId +
+                "id=" + epicId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
                 '}' + "\n";
     }
 

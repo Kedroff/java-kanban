@@ -1,17 +1,24 @@
 package ru.yandex.practicum.tasks;
 
 import ru.yandex.practicum.manager.Status;
+import ru.yandex.practicum.manager.TaskType;
 
 public class Task {
     protected int id;
     protected String name;
     protected String description;
     protected Status status;
+    protected TaskType type;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
+        this.type = TaskType.TASK;
+    }
+
+    public TaskType getType() {
+        return type;
     }
 
     public int getId() {

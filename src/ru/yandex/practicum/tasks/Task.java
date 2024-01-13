@@ -1,24 +1,19 @@
 package ru.yandex.practicum.tasks;
 
-import ru.yandex.practicum.manager.Status;
-import ru.yandex.practicum.manager.TaskType;
-
 public class Task {
     protected int id;
     protected String name;
     protected String description;
     protected Status status;
-    protected TaskType type;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
-        this.type = TaskType.TASK;
     }
 
     public TaskType getType() {
-        return type;
+        return TaskType.TASK;
     }
 
     public int getId() {
@@ -49,18 +44,8 @@ public class Task {
         return status;
     }
 
-    public void setStatus(String status) {
-        switch (Status.valueOf(status)){
-            case NEW:
-                this.status = Status.NEW;
-                break;
-            case IN_PROGRESS:
-                this.status = Status.IN_PROGRESS;
-                break;
-            case DONE:
-                this.status = Status.DONE;
-                break;
-        }
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override

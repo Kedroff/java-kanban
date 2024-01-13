@@ -2,7 +2,7 @@ package ru.yandex.practicum.manager;
 
 public class Managers {
 
-    private Managers(){   // добавил приватный конструктор
+    private Managers(){
 
     }
     public static TaskManager getDefault(){

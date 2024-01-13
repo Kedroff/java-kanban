@@ -3,6 +3,7 @@ package ru.yandex.practicum.manager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskType;
 
 import java.util.ArrayList;
 import java.util.List;

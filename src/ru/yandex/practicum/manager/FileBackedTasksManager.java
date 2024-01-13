@@ -1,6 +1,8 @@
 package ru.yandex.practicum.manager;
 
+import ru.yandex.practicum.ExceptionPackage.ManagerSaveException;
 import ru.yandex.practicum.tasks.Epic;
+import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
@@ -9,7 +11,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -173,13 +174,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTaskStatus(Task task, String status) {
+    public void updateTaskStatus(Task task, Status status) {
         super.updateTaskStatus(task, status);
         save();
     }
 
     @Override
-    public void updateSubtaskStatus(Subtask subtask, String status) {
+    public void updateSubtaskStatus(Subtask subtask, Status status) {
         super.updateSubtaskStatus(subtask, status);
         save();
     }

@@ -1,50 +1,57 @@
 package ru.yandex.practicum.manager;
 
 import ru.yandex.practicum.tasks.Epic;
+import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public interface TaskManager {
-     void deleteTask();
+    void deleteTask();
 
-     void deleteSubtask();
+    void deleteSubtask();
 
-     void deleteEpic();
+    void deleteEpic();
 
-     Task getTaskByIdentify(int id);
+    Task getTaskByIdentify(int id);
 
-     Subtask getSubtaskByIdentify(int id);
+    Subtask getSubtaskByIdentify(int id);
 
-     Epic getEpicByIdentify(int id);
+    Epic getEpicByIdentify(int id);
 
-     int generateTask(Task task);
+    int generateTask(Task task);
 
-     int generateEpic(Epic epic);
+    int generateEpic(Epic epic);
 
-     Integer generateSubtask(Subtask subtask);
+    Integer generateSubtask(Subtask subtask);
 
-     void updateTask(Task task);
+    void updateTask(Task task);
 
-     void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask);
 
-     void updateEpic(Epic epic);
+    void updateEpic(Epic epic);
 
-     void updateEpicStatus(Epic epic);
+    void updateEpicStatus(Epic epic);
 
-     void updateTaskStatus(Task task, String status);
+    void updateTaskStatus(Task task, Status status);
 
-    void updateSubtaskStatus(Subtask subtask, String status);
+    void updateSubtaskStatus(Subtask subtask, Status status);
 
-     void deleteTaskByIdentify(int id);
+    void deleteTaskByIdentify(int id);
 
-     void deleteSubtaskByIdentify(int id);
+    void deleteSubtaskByIdentify(int id);
 
-     void deleteEpicByIdentify(int id);
+    void deleteEpicByIdentify(int id);
 
-     int generateId();
+    Map<Integer, Epic> getEpicHashMap();
+
+    Map<Integer, Subtask> getSubtaskHashMap();
+
+    Map<Integer, Task> getTaskHashMap();
+
+    int generateId();
 
     List<Task> getHistory();
 }

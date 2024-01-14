@@ -1,9 +1,9 @@
 package ru.yandex.practicum.manager;
 
 public class Node<Task> {
-    protected Node prevIndex;
+    protected Node <Task> prevIndex;
     protected Task data;
-    protected Node nextIndex;
+    protected Node <Task> nextIndex;
 
     public Node(Node prevIndex, Task data, Node nextIndex) {
         this.prevIndex = prevIndex;

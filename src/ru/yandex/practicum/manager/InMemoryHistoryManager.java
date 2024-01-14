@@ -4,15 +4,15 @@ import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    Map<Integer, Node> historyHash = new HashMap<>();
-    private Node head = null;
-    private Node tail = null;
+    private final Map<Integer, Node<Task>> historyHash = new HashMap<>();
+    private Node<Task> head = null;
+    private Node<Task> tail = null;
 
 
     @Override
@@ -23,7 +23,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         int id = task.getId();
-        Node node = historyHash.get(id);
+        Node<Task> node = historyHash.get(id);
         if (node != null) {
             remove(id);
         }
@@ -34,7 +34,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        Node node = historyHash.remove(id);
+        Node<Task> node = historyHash.remove(id);
         if (node == null) {
             return;
         }
@@ -46,39 +46,48 @@ public class InMemoryHistoryManager implements HistoryManager {
         return getTasks();
     }
 
-    public void removeNode(Node node) {
-        if (node.prevIndex != null) {
-            node.prevIndex.nextIndex = node.nextIndex;
-            if (node.nextIndex == null) {
-                tail = node.prevIndex;
+    private void removeNode(Node<Task> node) {
+        final Node<Task> prev = node.prevIndex;
+        final Node<Task> next = node.nextIndex;
+
+        if (prev != null) {
+            prev.nextIndex = next;
+            if (next == null) {
+                tail = prev;
             } else {
-                node.nextIndex.prevIndex = node.prevIndex;
+                next.prevIndex = prev;
             }
         } else {
-            head = node.nextIndex;
+            head = next;
             if (head == null) {
                 tail = null;
             } else {
                 head.prevIndex = null;
             }
         }
-    }
-
-    public void linkLast(Task element) {
-        final Node oldTail = tail;
-        final Node newNode = new Node(oldTail, element, null);
-        tail = newNode;
-        if (oldTail == null) {
-            head = newNode;
-        } else {
-            oldTail.nextIndex = newNode;
+        for (Map.Entry<Integer, Node<Task>> entry : historyHash.entrySet()) {
+            if (entry.getValue() == node) {
+                historyHash.remove(entry.getKey());
+                break;
+            }
         }
     }
 
-    public List<Task> getTasks() {
-        List<Task> list = new ArrayList<>();
+    private void linkLast(Task element) {
+        final Node<Task> newNode = new Node<>(tail, element, null);
+        if (tail == null) {
+            head = newNode;
+        } else {
+            tail.nextIndex = newNode;
+        }
+        tail = newNode;
+    }
 
-        Node node = head;
+
+    private List<Task> getTasks() {
+        List<Task> list = new LinkedList<>();
+
+        Node<Task> node = head;
 
         while (node != null) {
             list.add((Task) node.data);
@@ -103,11 +112,11 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private <T> void removeAllObjectsOfType(Class<T> objectType) {
-        Node node = head;
+        Node<Task> node = head;
         while (node != null) {
             if (objectType.isInstance(node.data)) {
-                Node nextNode = node.nextIndex;
-                removeNode(node);
+                Node<Task> nextNode = node.nextIndex;
+                removeNode(node);  // добавил удаление значений из мапы в конец метода removeNode
                 node = nextNode;
             } else {
                 node = node.nextIndex;

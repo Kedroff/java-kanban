@@ -2,42 +2,37 @@ package ru.yandex.practicum.tasks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class Epic extends ru.yandex.practicum.tasks.Task {
-    private List<Integer> subtasksIds;
+public class Epic extends Task {
+    private final List<Integer> subtasksIds;
 
-    private int epicId;
 
     public Epic(String name, String description) {
         super(name, description);
         subtasksIds = new ArrayList<>();
         this.status = Status.NEW;
     }
+
     @Override
     public int getId() {
         return id;
     }
+
     @Override
     public TaskType getType() {
         return TaskType.EPIC;
     }
 
-    public int getEpicId() {
-        return epicId;
-    }
-
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
-    }
-
     @Override
     public String toString() {
         return "Epic{" +
-                "id=" + epicId +
+                "subtasksIds=" + subtasksIds +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                '}' + "\n";
+                ", status=" + status +
+                '}';
     }
 
     public List<Integer> getSubtasksIds() {
@@ -47,8 +42,22 @@ public class Epic extends ru.yandex.practicum.tasks.Task {
     public void addSubtasksIds(int subtaskId) {
         subtasksIds.add(subtaskId);
     }
+
     public void cleanArraySubtasks() {
         subtasksIds.clear();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Epic epic = (Epic) o;
+        return subtasksIds.equals(epic.subtasksIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subtasksIds);
+    }
 }

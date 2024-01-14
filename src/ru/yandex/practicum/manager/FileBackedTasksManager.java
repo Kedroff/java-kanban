@@ -1,8 +1,7 @@
 package ru.yandex.practicum.manager;
 
-import ru.yandex.practicum.ExceptionPackage.ManagerSaveException;
+import ru.yandex.practicum.exceptionPackage.ManagerSaveException;
 import ru.yandex.practicum.tasks.Epic;
-import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
@@ -16,22 +15,23 @@ import java.util.List;
 import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private File file;
+    private final File file;
+
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {
         final FileBackedTasksManager taskManager = new FileBackedTasksManager(file);
-        try{
+        try {
             final String csv = Files.readString(file.toPath());
             final String[] lines = csv.split(System.lineSeparator());
             int generatorId = 0;
             List<Integer> history = Collections.emptyList();
-            for (int i = 0; i<lines.length;i++){
+            for (int i = 1; i < lines.length; i++) {
                 String line = lines[i];
-                if (line.isEmpty()){
-                    history = CSVFormatter.historyFromString(lines[i+1]);
+                if (line.isEmpty()) {
+                    history = CSVFormatter.historyFromString(lines[i + 1]);
                     break;
                 }
                 final Task task = CSVFormatter.fromString(line);
@@ -39,50 +39,65 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 if (id > generatorId) {
                     generatorId = id;
                 }
-                taskManager.generateTask(task);
+                switch (task.getType()) {
+                    case TASK:
+                        taskManager.tasks.put(id, task);
+                        break;
+                    case SUBTASK:
+                        taskManager.subtasks.put(id, (Subtask) task);
+                        break;
+                    case EPIC:
+                        taskManager.epics.put(id, (Epic) task);
+                        break;
+                }
             }
-            for (Map.Entry<Integer,Subtask> entry : taskManager.subtaskHashMap.entrySet()){
+            for (Map.Entry<Integer, Subtask> entry : taskManager.subtasks.entrySet()) {
                 final Subtask subtask = entry.getValue();
-                final Epic epic = taskManager.epicHashMap.get(subtask.getEpicId());
+                final Epic epic = taskManager.epics.get(subtask.getEpicId());
                 epic.addSubtasksIds(subtask.getId());
             }
-            for (Integer taskId : history){
-                taskManager.historyManager.add(taskManager.getTaskByIdentify(taskId));
+            for (Integer taskId : history) {
+                Task task = taskManager.tasks.get(taskId);
+                if (task != null) {
+                    taskManager.historyManager.add(task);
+                }
             }
             taskManager.generatedIds = generatorId;
         } catch (IOException e) {
-            throw new ManagerSaveException("Невозможно прочитать файл: " + file.getName(),e);
+            throw new ManagerSaveException("Невозможно прочитать файл: " + file.getName(), e);
         }
         return taskManager;
     }
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write("TaskId,Type,Description,Status,Description2,EpicId");
+            writer.newLine();
 
-            for (Map.Entry<Integer,Task> entry : taskHashMap.entrySet()){
+            for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
                 final Task task = entry.getValue();
                 writer.write(CSVFormatter.toString(task));
                 writer.newLine();
             }
 
-            for (Map.Entry<Integer,Subtask> entry : subtaskHashMap.entrySet()){
+            for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
                 final Subtask subtask = entry.getValue();
                 writer.write(CSVFormatter.toString(subtask));
                 writer.newLine();
             }
 
-            for (Map.Entry<Integer,Epic> entry : epicHashMap.entrySet()){
+            for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
                 final Task task = entry.getValue();
                 writer.write(CSVFormatter.toString(task));
                 writer.newLine();
             }
 
-                writer.newLine();
-                writer.write(CSVFormatter.toString(historyManager));
-                writer.newLine();
+            writer.newLine();
+            writer.write(CSVFormatter.toString(historyManager));
+            writer.newLine();
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Невозможно прочитать файл: " + file.getName(),e);
+            throw new ManagerSaveException("Невозможно прочитать файл: " + file.getName(), e);
         }
     }
 
@@ -128,15 +143,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
     public int generateTask(Task task) {
         int id = super.generateTask(task);
-        taskHashMap.put(id, task);
         save();
         return id;
     }
 
     @Override
     public int generateEpic(Epic epic) {
-        int id =  super.generateEpic(epic);
-        epicHashMap.put(id, epic);
+        int id = super.generateEpic(epic);
         save();
         return id;
     }
@@ -144,7 +157,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
     public Integer generateSubtask(Subtask subtask) {
         Integer id = super.generateSubtask(subtask);
-        subtaskHashMap.put(id, subtask);
         save();
         return id;
     }
@@ -168,24 +180,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateEpicStatus(Epic epic) {
-        super.updateEpicStatus(epic);
-        save();
-    }
-
-    @Override
-    public void updateTaskStatus(Task task, Status status) {
-        super.updateTaskStatus(task, status);
-        save();
-    }
-
-    @Override
-    public void updateSubtaskStatus(Subtask subtask, Status status) {
-        super.updateSubtaskStatus(subtask, status);
-        save();
-    }
-
-    @Override
     public void deleteTaskByIdentify(int id) {
         super.deleteTaskByIdentify(id);
         save();
@@ -204,7 +198,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public static void main(String[] args) {
-        FileBackedTasksManager manager = new FileBackedTasksManager(new File("myFile.csv"));
+        File file = new File("myFile.csv");
+        FileBackedTasksManager manager = new FileBackedTasksManager(file);
 
         Task task1 = new Task("Покормить кота", "Кормить влажным кормом");
         manager.generateTask(task1);
@@ -221,13 +216,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Subtask subtask2 = new Subtask("Классы", "Выучить классы", epicId1);
         manager.generateSubtask(subtask2);
 
-        manager.getSubtaskByIdentify(subtask1.getId());
-        manager.getEpicByIdentify(epicId1);
 
-        FileBackedTasksManager newManager = FileBackedTasksManager.loadFromFile(new File("myFile.csv"));
+        FileBackedTasksManager loadedManager = FileBackedTasksManager.loadFromFile(file);
 
-        System.out.println("История просмотра восстановлена: " + newManager.historyManager);
+        // не могу понять почему всегда пишет false, может быть из-за неправильного переопределения equals и hashCode
 
-        System.out.println("Задачи в новом менеджере: " + newManager.taskHashMap.values());
+        System.out.println("Проверка задач: " + loadedManager.tasks.values().equals(manager.tasks.values()));
+        System.out.println("Проверка подзадач: " + loadedManager.subtasks.values().equals(manager.subtasks.values()));
+        System.out.println("Проверка эпиков: " + loadedManager.epics.values().equals(manager.epics.values()));
+        System.out.println("Проверка истории: " + loadedManager.historyManager.equals(manager.historyManager));
+
+        // а вот по ключам true О_о
+
+        System.out.println("Сравнение задач по ключам: " + loadedManager.tasks.keySet().equals(manager.tasks.keySet()));
+        System.out.println("Сравнение подзадач по ключам: " + loadedManager.subtasks.keySet().equals(manager.subtasks.keySet()));
+        System.out.println("Сравнение эпиков по ключам: " + loadedManager.epics.keySet().equals(manager.epics.keySet()));
+        System.out.println("Сравнение истории: " + loadedManager.historyManager.equals(manager.historyManager));
     }
 }

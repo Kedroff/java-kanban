@@ -1,12 +1,10 @@
 package ru.yandex.practicum.manager;
 
 import ru.yandex.practicum.tasks.Epic;
-import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TaskManager {
     void deleteTask();
@@ -33,23 +31,17 @@ public interface TaskManager {
 
     void updateEpic(Epic epic);
 
-    void updateEpicStatus(Epic epic);
-
-    void updateTaskStatus(Task task, Status status);
-
-    void updateSubtaskStatus(Subtask subtask, Status status);
-
     void deleteTaskByIdentify(int id);
 
     void deleteSubtaskByIdentify(int id);
 
     void deleteEpicByIdentify(int id);
 
-    Map<Integer, Epic> getEpicHashMap();
+    public List<Epic> getEpicList();
 
-    Map<Integer, Subtask> getSubtaskHashMap();
+    public List<Subtask> getSubtaskList();
 
-    Map<Integer, Task> getTaskHashMap();
+    public List<Task> getTaskList();
 
     int generateId();
 

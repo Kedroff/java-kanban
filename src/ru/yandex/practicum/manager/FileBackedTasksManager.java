@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
+    private static final String CSV_HEADER = "id,type,name,status,description,epic";
     private final File file;
 
     public FileBackedTasksManager(File file) {
@@ -58,8 +59,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             for (Integer taskId : history) {
                 Task task = taskManager.tasks.get(taskId);
+                Subtask subtask = taskManager.subtasks.get(taskId);
+                Epic epic = taskManager.epics.get(taskId);
                 if (task != null) {
                     taskManager.historyManager.add(task);
+                } else if (subtask != null) {
+                    taskManager.historyManager.add(subtask);
+                } else if (epic != null) {
+                    taskManager.historyManager.add(epic);
                 }
             }
             taskManager.generatedIds = generatorId;
@@ -71,7 +78,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("TaskId,Type,Description,Status,Description2,EpicId");
+            writer.write(CSV_HEADER);
             writer.newLine();
 
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
@@ -216,21 +223,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Subtask subtask2 = new Subtask("Классы", "Выучить классы", epicId1);
         manager.generateSubtask(subtask2);
 
-
         FileBackedTasksManager loadedManager = FileBackedTasksManager.loadFromFile(file);
 
-        // не могу понять почему всегда пишет false, может быть из-за неправильного переопределения equals и hashCode
+        System.out.println("Проверка задач: " + loadedManager.getTaskList().equals(manager.getTaskList()));
+        System.out.println("Проверка подзадач: " + loadedManager.getSubtaskList().equals(manager.getSubtaskList()));
+        System.out.println("Проверка эпиков: " + loadedManager.getEpicList().equals(manager.getEpicList()));
+        System.out.println("Проверка истории: " + loadedManager.getHistory().equals(manager.getHistory()));
 
-        System.out.println("Проверка задач: " + loadedManager.tasks.values().equals(manager.tasks.values()));
-        System.out.println("Проверка подзадач: " + loadedManager.subtasks.values().equals(manager.subtasks.values()));
-        System.out.println("Проверка эпиков: " + loadedManager.epics.values().equals(manager.epics.values()));
-        System.out.println("Проверка истории: " + loadedManager.historyManager.equals(manager.historyManager));
-
-        // а вот по ключам true О_о
-
-        System.out.println("Сравнение задач по ключам: " + loadedManager.tasks.keySet().equals(manager.tasks.keySet()));
-        System.out.println("Сравнение подзадач по ключам: " + loadedManager.subtasks.keySet().equals(manager.subtasks.keySet()));
-        System.out.println("Сравнение эпиков по ключам: " + loadedManager.epics.keySet().equals(manager.epics.keySet()));
-        System.out.println("Сравнение истории: " + loadedManager.historyManager.equals(manager.historyManager));
+        System.out.println("Сравнение значения идентификатора последней добавленной задачи: " + (loadedManager.generatedIds == manager.generatedIds));
     }
 }

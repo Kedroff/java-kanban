@@ -65,12 +65,6 @@ public class InMemoryHistoryManager implements HistoryManager {
                 head.prevIndex = null;
             }
         }
-        for (Map.Entry<Integer, Node<Task>> entry : historyHash.entrySet()) {
-            if (entry.getValue() == node) {
-                historyHash.remove(entry.getKey());
-                break;
-            }
-        }
     }
 
     private void linkLast(Task element) {
@@ -90,7 +84,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         Node<Task> node = head;
 
         while (node != null) {
-            list.add((Task) node.data);
+            list.add(node.data);
             node = node.nextIndex;
         }
         return list;
@@ -116,7 +110,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         while (node != null) {
             if (objectType.isInstance(node.data)) {
                 Node<Task> nextNode = node.nextIndex;
-                removeNode(node);  // добавил удаление значений из мапы в конец метода removeNode
+
+                historyHash.remove(node.data.getId());
+
+                removeNode(node);
                 node = nextNode;
             } else {
                 node = node.nextIndex;

@@ -59,14 +59,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             for (Integer taskId : history) {
                 Task task = taskManager.tasks.get(taskId);
-                Subtask subtask = taskManager.subtasks.get(taskId);
-                Epic epic = taskManager.epics.get(taskId);
                 if (task != null) {
                     taskManager.historyManager.add(task);
-                } else if (subtask != null) {
-                    taskManager.historyManager.add(subtask);
-                } else if (epic != null) {
-                    taskManager.historyManager.add(epic);
+                } else if ((task = taskManager.subtasks.get(taskId)) != null) {
+                    taskManager.historyManager.add(task);
+                } else if ((task = taskManager.epics.get(taskId)) != null) {
+                    taskManager.historyManager.add(task);
                 }
             }
             taskManager.generatedIds = generatorId;

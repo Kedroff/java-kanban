@@ -1,20 +1,21 @@
 package ru.yandex.practicum.manager;
 
+import ru.yandex.practicum.exceptionPackage.TaskValidationException;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int generatedIds = 0;
     protected Map<Integer, Epic> epics = new HashMap<>();
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
     protected Map<Integer, Task> tasks = new HashMap<>();
+    protected Map<LocalDateTime, Task> prioritizedTasks = new TreeMap<>();
     protected HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
@@ -66,6 +67,8 @@ public class InMemoryTaskManager implements TaskManager {
         int taskId = generateId();
         task.setId(taskId);
         tasks.put(taskId, task);
+        validate(task);
+        prioritizedTasks.put(task.getStartTime(), task);
         return taskId;
     }
 
@@ -74,6 +77,8 @@ public class InMemoryTaskManager implements TaskManager {
         int epicId = generateId();
         epic.setId(epicId);
         epics.put(epicId, epic);
+        validate(epic);
+        prioritizedTasks.put(epic.getStartTime(), epic);
         return epicId;
     }
 
@@ -88,6 +93,9 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.put(subtaskId, subtask);
         updateEpicStatus(epic);
 
+        validate(subtask);
+        prioritizedTasks.put(subtask.getStartTime(), subtask);
+
         return subtaskId;
     }
 
@@ -97,7 +105,12 @@ public class InMemoryTaskManager implements TaskManager {
         if (savedTask == null) {
             return;
         }
+        savedTask.setName(task.getName());
+        savedTask.setDescription(task.getDescription());
+        savedTask.setStatus(task.getStatus());
+        savedTask.setStartTime(task.getStartTime());
         tasks.put(task.getId(), savedTask);
+        prioritizedTasks.put(savedTask.getStartTime(), savedTask);
 
     }
 
@@ -111,8 +124,15 @@ public class InMemoryTaskManager implements TaskManager {
         if (savedEpic == null) {
             return;
         }
+        savedSubtask.setName(subtask.getName());
+        savedSubtask.setDescription(subtask.getDescription());
+        savedSubtask.setStatus(subtask.getStatus());
+        savedSubtask.setStartTime(subtask.getStartTime());
         subtasks.put(subtask.getId(), savedSubtask);
         updateEpicStatus(savedEpic);
+
+        validate(savedSubtask);
+        prioritizedTasks.put(savedSubtask.getStartTime(), savedSubtask);
     }
 
     @Override
@@ -123,6 +143,10 @@ public class InMemoryTaskManager implements TaskManager {
         }
         savedEpic.setName(epic.getName());
         savedEpic.setDescription(epic.getDescription());
+        updateEpicStatus(savedEpic);
+
+        validate(savedEpic);
+        prioritizedTasks.put(savedEpic.getStartTime(), savedEpic);
     }
 
     private void updateEpicStatus(Epic epic) {
@@ -189,6 +213,34 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(i);
         }
 
+    }
+
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks.values())
+                .stream()
+                .sorted(Comparator.comparing(Task::getStartTime, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+    }
+
+    private void validate(Task task) {
+        LocalDateTime startTime = task.getStartTime();
+        LocalDateTime endTime = task.getEndTime();
+
+        Integer result = prioritizedTasks.values().stream()
+                .map(tsk -> {
+                    if (startTime.isBefore(tsk.getEndTime()) && endTime.isBefore(tsk.getStartTime())) {
+                        return 1;
+                    }
+                    if (startTime.isBefore(tsk.getEndTime()) && endTime.isAfter(tsk.getEndTime())) {
+                        return 1;
+                    }
+                    return 0;
+                })
+                .reduce(Integer::sum)
+                .orElse(0);
+        if (result > 0) {
+            throw new TaskValidationException("Задача пересекается");
+        }
     }
 
     @Override

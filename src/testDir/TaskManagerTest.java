@@ -1,4 +1,4 @@
-package ru.yandex.practicum.Tests;
+package testDir;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.manager.TaskManager;

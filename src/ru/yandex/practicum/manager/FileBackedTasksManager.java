@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private static final String CSV_HEADER = "id,type,name,status,description,epic";
+    private static final String CSV_HEADER = "id,type,name,status,description,epic,start,end,duration";
     private final File file;
 
     public FileBackedTasksManager(File file) {
@@ -43,9 +43,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 switch (task.getType()) {
                     case TASK:
                         taskManager.tasks.put(id, task);
+                        taskManager.prioritizedTasks.add(task);
                         break;
                     case SUBTASK:
                         taskManager.subtasks.put(id, (Subtask) task);
+                        taskManager.prioritizedTasks.add(task);
                         break;
                     case EPIC:
                         taskManager.epics.put(id, (Epic) task);

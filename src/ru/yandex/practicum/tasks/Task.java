@@ -10,6 +10,7 @@ public class Task {
     protected Status status;
     protected int duration;
     protected LocalDateTime startTime;
+    protected LocalDateTime endTime;
 
     public Task(String name, String description) {
         this.name = name;
@@ -99,6 +100,10 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, status);
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }
 

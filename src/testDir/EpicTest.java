@@ -1,4 +1,4 @@
-package ru.yandex.practicum.Tests;
+package testDir;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
-    private static InMemoryTaskManager taskManager;
+    private InMemoryTaskManager taskManager;
 
     @BeforeEach
     public void beforeEach() {
@@ -64,6 +64,7 @@ class EpicTest {
         Subtask subtask1 = new Subtask("Subtask","Description",epic.getId());
         subtask1.setStatus(Status.DONE);
         subtask1.setStartTime(LocalDateTime.now());
+        subtask1.setDuration(10);
         taskManager.generateSubtask(subtask1);
 
         Subtask subtask2 = new Subtask("Subtask","Description",epic.getId());

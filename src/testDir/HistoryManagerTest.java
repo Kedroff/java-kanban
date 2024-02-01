@@ -1,4 +1,4 @@
-package ru.yandex.practicum.Tests;
+package testDir;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -94,10 +94,6 @@ public class CSVFormatter {
     }
 
     private static int setDuration(String value){
-        if (value.equals("null")){
-            return 0;
-        }else{
             return Integer.parseInt(value);
-        }
     }
 }

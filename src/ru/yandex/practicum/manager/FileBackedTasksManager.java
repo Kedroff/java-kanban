@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private static final String CSV_HEADER = "id,type,name,status,description,epic,start,end,duration";
+    private static final String CSV_HEADER = "id,type,name,status,description,start,end,duration,epic";
     private final File file;
 
     public FileBackedTasksManager(File file) {

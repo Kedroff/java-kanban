@@ -63,12 +63,9 @@ class EpicTest {
 
         Subtask subtask1 = new Subtask("Subtask","Description",epic.getId());
         subtask1.setStatus(Status.DONE);
-        subtask1.setStartTime(LocalDateTime.now());
-        subtask1.setDuration(10);
         taskManager.generateSubtask(subtask1);
 
         Subtask subtask2 = new Subtask("Subtask","Description",epic.getId());
-        subtask2.setStartTime(LocalDateTime.now());
         taskManager.generateSubtask(subtask2);
 
         assertEquals(Status.IN_PROGRESS,epic.getStatus());

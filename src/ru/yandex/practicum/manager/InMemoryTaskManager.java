@@ -6,7 +6,6 @@ import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -186,7 +185,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskByIdentify(int id) {
         Task taskToRemove = tasks.remove(id);
         prioritizedTasks.remove(taskToRemove);
-        tasks.remove(id);
         historyManager.remove(id);
     }
 
@@ -249,36 +247,26 @@ public class InMemoryTaskManager implements TaskManager {
 
             LocalDateTime existEndTime = taskPriority.getEndTime();
 
-            /*
-            не совсем понял почему ставится continue в ревью вот в этом месте :(
 
                 if (!startTime.isBefore(existEndTime)) {
                 continue;
-            }
-
-            может вы это имели ввиду?
-
-                if (!startTime.isBefore(existEndTime)) {
+                }if (!existStartTime.isBefore(endTime)) {
                 continue;
-                }if (!existStartTime.isBefore(startTime)){
-                throw new TaskValidationException("Задача пересекается с другой задачей: " + taskPriority);
                 }
-             */
-
-            // а я вот подумал что можно вот так объединить
-            if (!startTime.isBefore(existEndTime) && !existStartTime.isBefore(startTime)) {
                 throw new TaskValidationException("Задача пересекается с другой задачей: " + taskPriority);
-            }
+
+
         }
     }
 
-    public void updateEpicTime(int epicId) {
+    private void updateEpicTime(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic == null) {
             return;
         }
         LocalDateTime epicStartTime = null;
         LocalDateTime epicEndTime = null;
+        int duration = 0;
 
         for (int subtaskId : epic.getSubtasksIds()) {
             Subtask subtask = subtasks.get(subtaskId);
@@ -292,23 +280,13 @@ public class InMemoryTaskManager implements TaskManager {
                 if (subtaskEndTime != null && (epicEndTime == null || subtaskEndTime.isAfter(epicEndTime))) {
                     epicEndTime = subtaskEndTime;
                 }
+                duration += subtask.getDuration();
             }
         }
         epic.setStartTime(epicStartTime);
         epic.setEndTime(epicEndTime);
+        epic.setDuration(duration);
 
-        if (epicStartTime != null && epicEndTime != null) {
-            int durationMinutes = 0;
-            List<Integer> ids = epic.getSubtasksIds();
-
-            for (int subtaskId : ids) {
-                Subtask subtask = subtasks.get(subtaskId);
-                if (subtask != null) {
-                    durationMinutes += subtask.getDuration();
-                }
-            }
-            epic.setDuration(durationMinutes);
-        }
     }
 
     @Override

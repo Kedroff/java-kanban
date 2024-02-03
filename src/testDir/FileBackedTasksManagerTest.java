@@ -1,5 +1,6 @@
 package testDir;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.manager.FileBackedTasksManager;
 import ru.yandex.practicum.tasks.Epic;
@@ -10,7 +11,11 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> { // Вообще тесты не проходят, выдает ошибку, не понимаю :(
+class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
+    @BeforeEach
+    public void init() {
+        super.taskManager = new FileBackedTasksManager(new File("testFile.csv"));
+    }
 
     @Test
     public void emptyTaskList() {

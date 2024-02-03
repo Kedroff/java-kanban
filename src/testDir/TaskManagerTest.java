@@ -6,12 +6,13 @@ import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class TaskManagerTest<T extends TaskManager> { // не хотят работать тесты, я не понимаю почееееемууууууууу
-     T taskManager;
+public abstract class TaskManagerTest<T extends TaskManager> { // Блин, все что связано с subtask вообще не проходит
+     T taskManager;                                            // может быть дело в методе getEndTime у Epic :/
 
     @Test
     public void deleteTask() {
@@ -43,9 +44,6 @@ public abstract class TaskManagerTest<T extends TaskManager> { // не хотя�
     public void deleteEpic() {
         Epic epic = new Epic("Epic 1", "Description 1");
         taskManager.generateEpic(epic);
-
-        Subtask subtask1 = new Subtask("Subtask 1", "Description 1", epic.getId());
-        taskManager.generateSubtask(subtask1);
 
         taskManager.deleteEpic();
 
@@ -142,6 +140,8 @@ public abstract class TaskManagerTest<T extends TaskManager> { // не хотя�
         taskManager.generateEpic(epic);
 
         Subtask subtask1 = new Subtask("Subtask 1", "Description 1", epic.getId());
+        subtask1.setStartTime(LocalDateTime.now());
+        subtask1.setDuration(10);
         Integer subtaskId = taskManager.generateSubtask(subtask1);
 
         assertNotNull(subtaskId);

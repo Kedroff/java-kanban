@@ -10,7 +10,7 @@ import ru.yandex.practicum.tasks.Task;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HistoryManagerTest {
     private HistoryManager historyManager;
@@ -29,6 +29,7 @@ class HistoryManagerTest {
         assertEquals(1, history.size());
         assertEquals(task, history.get(0));
     }
+
     @Test
     public void dublicateAdd() {
         Task task = new Task("Task 1", "Description 1");
@@ -57,10 +58,10 @@ class HistoryManagerTest {
         Task task1 = new Task("Task 1", "Description 1");
         historyManager.add(task1);
         Task task2 = new Task("Task 2", "Description 2");
-        task2.setId(task1.getId()+1);
+        task2.setId(task1.getId() + 1);
         historyManager.add(task2);
         Task task3 = new Task("Task 3", "Description 3");
-        task3.setId(task2.getId()+1);
+        task3.setId(task2.getId() + 1);
         historyManager.add(task3);
 
         historyManager.remove(task2.getId());

@@ -11,8 +11,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class TaskManagerTest<T extends TaskManager> { // Блин, все что связано с subtask вообще не проходит
-     T taskManager;                                            // может быть дело в методе getEndTime у Epic :/
+public abstract class TaskManagerTest<T extends TaskManager> {
+    T taskManager;
 
     @Test
     public void deleteTask() {
@@ -29,9 +29,14 @@ public abstract class TaskManagerTest<T extends TaskManager> { // Блин, вс
     @Test
     public void deleteSubtask() {
         Epic epic = new Epic("Epic 1", "Description 1");
+        epic.setStartTime(LocalDateTime.now());
+        epic.setDuration(10);
+        epic.setEndTime(LocalDateTime.now().plusMinutes(10));
         taskManager.generateEpic(epic);
 
         Subtask subtask1 = new Subtask("Subtask 1", "Description 1", epic.getId());
+        subtask1.setStartTime(LocalDateTime.now());
+        subtask1.setDuration(10);
         taskManager.generateSubtask(subtask1);
 
         taskManager.deleteSubtask();
@@ -114,8 +119,8 @@ public abstract class TaskManagerTest<T extends TaskManager> { // Блин, вс
         List<Task> tasks = taskManager.getTaskList();
 
         assertNotNull(tasks);
-        assertEquals(1,tasks.size());
-        assertEquals(task1,tasks.get(0));
+        assertEquals(1, tasks.size());
+        assertEquals(task1, tasks.get(0));
     }
 
     @Test
@@ -130,8 +135,8 @@ public abstract class TaskManagerTest<T extends TaskManager> { // Блин, вс
         List<Epic> epics = taskManager.getEpicList();
 
         assertNotNull(epics);
-        assertEquals(1,epics.size());
-        assertEquals(epic1,epics.get(0));
+        assertEquals(1, epics.size());
+        assertEquals(epic1, epics.get(0));
     }
 
     @Test
@@ -153,8 +158,8 @@ public abstract class TaskManagerTest<T extends TaskManager> { // Блин, вс
         List<Subtask> subtasks = taskManager.getSubtaskList();
 
         assertNotNull(subtasks);
-        assertEquals(1,subtasks.size());
-        assertEquals(subtask1,subtasks.get(0));
+        assertEquals(1, subtasks.size());
+        assertEquals(subtask1, subtasks.get(0));
     }
 
     @Test

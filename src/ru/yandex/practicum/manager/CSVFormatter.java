@@ -32,7 +32,7 @@ public class CSVFormatter {
         final int duration = setDuration(line[7]);
 
         if (type.equals(TaskType.SUBTASK)) {
-            final int epicId = Integer.parseInt(line[5]);
+            final int epicId = Integer.parseInt(line[8]);
             final Subtask subtask = new Subtask(name, description, epicId);
             subtask.setStatus(status);
             subtask.setId(taskId);
@@ -85,15 +85,15 @@ public class CSVFormatter {
         return Ids;
     }
 
-    private static LocalDateTime setTime(String value){
-        if (value.equals("null")){
+    private static LocalDateTime setTime(String value) {
+        if (value.equals("null")) {
             return null;
-        }else{
+        } else {
             return LocalDateTime.parse(value);
         }
     }
 
-    private static int setDuration(String value){
-            return Integer.parseInt(value);
+    private static int setDuration(String value) {
+        return Integer.parseInt(value);
     }
 }

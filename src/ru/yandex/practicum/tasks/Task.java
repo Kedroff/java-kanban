@@ -3,7 +3,7 @@ package ru.yandex.practicum.tasks;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Comparable<Task>{
     protected int id;
     protected String name;
     protected String description;
@@ -104,6 +104,11 @@ public class Task {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    @Override
+    public int compareTo(Task task) {
+        return this.getStartTime().compareTo(task.getStartTime());
     }
 }
 

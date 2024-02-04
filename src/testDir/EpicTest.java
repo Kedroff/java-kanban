@@ -9,7 +9,7 @@ import ru.yandex.practicum.tasks.Subtask;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EpicTest {
     private InMemoryTaskManager taskManager;
@@ -20,68 +20,69 @@ class EpicTest {
     }
 
     @Test
-    public void EpicStatusEmptySubtaskList(){
-        Epic epic = new Epic("Epic","Description");
+    public void EpicStatusEmptySubtaskList() {
+        Epic epic = new Epic("Epic", "Description");
         epic.setStartTime(LocalDateTime.now());
         taskManager.generateEpic(epic);
 
-        assertEquals(Status.NEW,epic.getStatus(),"Статусы не совпадают");
+        assertEquals(Status.NEW, epic.getStatus(), "Статусы не совпадают");
 
     }
+
     @Test
-    public void EpicStatusSubtasksStatusNew(){
-        Epic epic = new Epic("Epic","Description");
+    public void EpicStatusSubtasksStatusNew() {
+        Epic epic = new Epic("Epic", "Description");
         epic.setStartTime(LocalDateTime.now());
         taskManager.generateEpic(epic);
 
-        Subtask subtask1 = new Subtask("Subtask","Description",epic.getId());
+        Subtask subtask1 = new Subtask("Subtask", "Description", epic.getId());
         subtask1.setStartTime(LocalDateTime.now().plusMinutes(10));
         taskManager.generateSubtask(subtask1);
 
-        assertEquals(Status.NEW,epic.getStatus());
+        assertEquals(Status.NEW, epic.getStatus());
     }
 
     @Test
-    public void EpicStatusSubtasksStatusDone(){
-        Epic epic = new Epic("Epic","Description");
+    public void EpicStatusSubtasksStatusDone() {
+        Epic epic = new Epic("Epic", "Description");
         epic.setStartTime(LocalDateTime.now());
         taskManager.generateEpic(epic);
 
-        Subtask subtask1 = new Subtask("Subtask","Description",epic.getId());
+        Subtask subtask1 = new Subtask("Subtask", "Description", epic.getId());
         subtask1.setStatus(Status.DONE);
         subtask1.setStartTime(LocalDateTime.now());
         taskManager.generateSubtask(subtask1);
 
-        assertEquals(Status.DONE,epic.getStatus());
+        assertEquals(Status.DONE, epic.getStatus());
     }
 
     @Test
-    public void EpicStatusSubtasksStatusNewAndDone(){
-        Epic epic = new Epic("Epic","Description");
+    public void EpicStatusSubtasksStatusNewAndDone() {
+        Epic epic = new Epic("Epic", "Description");
         epic.setStartTime(LocalDateTime.now());
         taskManager.generateEpic(epic);
 
-        Subtask subtask1 = new Subtask("Subtask","Description",epic.getId());
+        Subtask subtask1 = new Subtask("Subtask", "Description", epic.getId());
         subtask1.setStatus(Status.DONE);
         taskManager.generateSubtask(subtask1);
 
-        Subtask subtask2 = new Subtask("Subtask","Description",epic.getId());
+        Subtask subtask2 = new Subtask("Subtask", "Description", epic.getId());
         taskManager.generateSubtask(subtask2);
 
-        assertEquals(Status.IN_PROGRESS,epic.getStatus());
+        assertEquals(Status.IN_PROGRESS, epic.getStatus());
     }
 
     @Test
-    public void EpicStatusSubtasksStatusInProgress(){
-        Epic epic = new Epic("Epic","Description");
+    public void EpicStatusSubtasksStatusInProgress() {
+        Epic epic = new Epic("Epic", "Description");
         epic.setStartTime(LocalDateTime.now());
         taskManager.generateEpic(epic);
 
-        Subtask subtask1 = new Subtask("Subtask","Description",epic.getId());
+        Subtask subtask1 = new Subtask("Subtask", "Description", epic.getId());
         subtask1.setStatus(Status.IN_PROGRESS);
         subtask1.setStartTime(LocalDateTime.now());
         taskManager.generateSubtask(subtask1);
 
-        assertEquals(Status.IN_PROGRESS,epic.getStatus());
+        assertEquals(Status.IN_PROGRESS, epic.getStatus());
     }
 }

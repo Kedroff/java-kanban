@@ -223,6 +223,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
     }
+
     @Override
     public Set<Task> getPrioritizedTasks() {
         return new TreeSet<>(prioritizedTasks);
@@ -230,7 +231,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void validate(Task task) {
         LocalDateTime startTime = task.getStartTime();
-        if (startTime == null){
+        if (startTime == null) {
             return;
         }
         LocalDateTime endTime = task.getEndTime();
@@ -248,12 +249,13 @@ public class InMemoryTaskManager implements TaskManager {
             LocalDateTime existEndTime = taskPriority.getEndTime();
 
 
-                if (!startTime.isBefore(existEndTime)) {
+            if (!startTime.isBefore(existEndTime)) {
                 continue;
-                }if (!existStartTime.isBefore(endTime)) {
+            }
+            if (!existStartTime.isBefore(endTime)) {
                 continue;
-                }
-                throw new TaskValidationException("Задача пересекается с другой задачей: " + taskPriority);
+            }
+            throw new TaskValidationException("Задача пересекается с другой задачей: " + taskPriority);
 
 
         }

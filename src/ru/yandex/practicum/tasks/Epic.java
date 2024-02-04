@@ -67,27 +67,30 @@ public class Epic extends Task {
     }
 
     @Override
-    public LocalDateTime getEndTime() {   //
+    public LocalDateTime getEndTime() {
         if (!subtasksIds.isEmpty()) {
             LocalDateTime earliestStartTime = null;
             LocalDateTime latestEndTime = null;
 
             for (int subtaskId : subtasksIds) {
                 Subtask subtask = manager.getSubtaskByIdentify(subtaskId);
-                LocalDateTime subtaskStartTime = subtask.getStartTime();
-                LocalDateTime subtaskEndTime = subtask.getEndTime();
+                if (subtask != null) {
+                    LocalDateTime subtaskStartTime = subtask.getStartTime();
+                    LocalDateTime subtaskEndTime = subtask.getEndTime();
 
-                if (subtaskStartTime != null && (earliestStartTime == null || subtaskStartTime.isBefore(earliestStartTime))) {
-                    earliestStartTime = subtaskStartTime;
-                }
+                    if (subtaskStartTime != null && (earliestStartTime == null || subtaskStartTime.isBefore(earliestStartTime))) {
+                        earliestStartTime = subtaskStartTime;
+                    }
 
-                if (subtaskEndTime != null && (latestEndTime == null || subtaskEndTime.isAfter(latestEndTime))) {
-                    latestEndTime = subtaskEndTime;
+                    if (subtaskEndTime != null && (latestEndTime == null || subtaskEndTime.isAfter(latestEndTime))) {
+                        latestEndTime = subtaskEndTime;
+                    }
                 }
             }
 
             if (earliestStartTime != null && latestEndTime != null) {
                 startTime = earliestStartTime;
+                endTime = latestEndTime;
                 return latestEndTime;
             }
         }

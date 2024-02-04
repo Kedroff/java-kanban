@@ -6,17 +6,15 @@ import ru.yandex.practicum.manager.InMemoryTaskManager;
 import ru.yandex.practicum.tasks.Task;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
-    private InMemoryTaskManager taskManager;
-
     @BeforeEach
     void beforeEach() {
-        taskManager = new InMemoryTaskManager();
+        super.taskManager = new InMemoryTaskManager();
     }
 
     @Test
@@ -32,7 +30,9 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
         Set<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
 
-//        assertEquals(task2, prioritizedTasks.get(1));
-//        assertEquals(task1, prioritizedTasks.get(0));
+        List<Task> tasksList = new ArrayList<>(prioritizedTasks);
+
+        assertEquals(task2, tasksList.get(1));
+        assertEquals(task1, tasksList.get(0));
     }
 }

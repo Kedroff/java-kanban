@@ -30,7 +30,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         }
     }
 
-    protected void addTasks(List<? extends Task> tasks){
+    public void addTasks(List<? extends Task> tasks){
         for (Task task : tasks){
             final int id = task.getId();
             if (id > generatedIds){
@@ -48,7 +48,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
             }
         }
     }
-    private void load(){
+    public void load(){
         ArrayList<Task> tasks = gson.fromJson(client.load("tasks"),new TypeToken<ArrayList<Task>>() {
         }.getType());
         addTasks(tasks);

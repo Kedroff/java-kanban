@@ -2,71 +2,87 @@ package testDir;
 
 import org.junit.jupiter.api.*;
 import ru.yandex.practicum.http.HttpTaskManager;
-import ru.yandex.practicum.http.HttpTaskServer;
+import ru.yandex.practicum.server.KVServer;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
-    private static HttpTaskServer server;
+    private static KVServer server;;
 
     @BeforeEach
     public void setUp() throws IOException {
-        server = new HttpTaskServer();
+        server = new KVServer();
         server.start();
         super.taskManager = new HttpTaskManager(8080, false);
     }
 
     @AfterEach
     public void tearDown() {
-        server.stop();
+        server.stopServer();
     }
 
     @Test
     public void testAddTasks() {
-       HttpTaskManager manager = new HttpTaskManager(8080);
-        List<Task> tasks = new ArrayList<>();
         Task task1 = new Task("Task 1", "Description 1");
         Task task2 = new Task("Task 2", "Description 2");
-        tasks.add(task1);
-        tasks.add(task2);
 
-        manager.addTasks(tasks);
+        super.taskManager.generateTask(task1);
+        super.taskManager.generateTask(task2);
+
+        HttpTaskManager manager = new HttpTaskManager(8080, true);
 
         assertEquals(2, manager.getTaskList().size());
-        Assertions.assertTrue(manager.getTaskList().contains(task1));
-        Assertions.assertTrue(manager.getTaskList().contains(task2));
+        Assertions.assertEquals(task1, manager.getTaskByIdentify(task1.getId()));
+        Assertions.assertEquals(task2, manager.getTaskByIdentify(task2.getId()));
     }
+
 
     @Test
     public void testLoad() {
         HttpTaskManager manager = new HttpTaskManager(8080);
-        manager.load();
 
-        Assertions.assertFalse(manager.getTaskList().isEmpty());
-        Assertions.assertFalse(manager.getEpicList().isEmpty());
-        Assertions.assertFalse(manager.getSubtaskList().isEmpty());
+        Task task1 = new Task("Task 1", "Description 1");
+        Task task2 = new Task("Task 2", "Description 2");
+
+        super.taskManager.generateTask(task1);
+        super.taskManager.generateTask(task2);
+
+        manager.addTasks(List.of(task1, task2));
+        manager.save();
+
+        HttpTaskManager loadedManager = new HttpTaskManager(8080, true);
+
+        loadedManager.load();
+
+        assertEquals(2, loadedManager.getTaskList().size());
+        Assertions.assertTrue(loadedManager.getTaskList().contains(task1));
+        Assertions.assertTrue(loadedManager.getTaskList().contains(task2));
     }
 
     @Test
     public void testSave() {
-        HttpTaskManager manager = new HttpTaskManager(8080);
-        Task task = new Task("Task", "Description");
-        Epic epic = new Epic("Epic", "Description");
-        Subtask subtask = new Subtask("Subtask", "Description", epic.getId());
+        Task task1 = new Task("Task 1", "Description 1");
+        Task task2 = new Task("Task 2", "Description 2");
 
-        manager.generateTask(task);
-        manager.generateEpic(epic);
-        manager.generateSubtask(subtask);
+        super.taskManager.generateTask(task1);
+        super.taskManager.generateTask(task2);
 
-        manager.save();
+        super.taskManager.addTasks(List.of(task1, task2));
 
+        super.taskManager.save();
+
+        HttpTaskManager manager = new HttpTaskManager(8080, true);
+
+        assertEquals(2, manager.getTaskList().size());
+
+        Assertions.assertEquals(task1, manager.getTaskByIdentify(task1.getId()));
+        Assertions.assertEquals(task2, manager.getTaskByIdentify(task2.getId()));
     }
 
     @Test

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.http.HttpTaskManager;
 import ru.yandex.practicum.http.HttpTaskServer;
 import ru.yandex.practicum.manager.InMemoryTaskManager;
 import ru.yandex.practicum.tasks.Epic;
@@ -22,17 +21,16 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HttpTaskServerTest {   // А как найти вас в пачке? можно инструкцию?
-                                    // Пытался по имени и фамилии по чатам найти, не вышло
+public class HttpTaskServerTest {
+
     private static HttpTaskServer server;
-    private static HttpTaskManager manager;
+    private static InMemoryTaskManager manager;
 
     @BeforeEach
     public void setUp() throws IOException {
-
-        server = new HttpTaskServer(new InMemoryTaskManager());
+        manager = new InMemoryTaskManager();
+        server = new HttpTaskServer(manager);
         server.start();
-        manager = new HttpTaskManager(8080);
     }
 
     @AfterEach

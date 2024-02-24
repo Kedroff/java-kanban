@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HttpTaskServerTest {
-
     private static HttpTaskServer server;
     private static InMemoryTaskManager manager;
 
@@ -40,7 +39,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testTaskPostEndpoint() throws IOException {
-        URL postUrl = new URL("http://localhost:8080/tasks");
+        URL postUrl = new URL("http://localhost:8082/tasks");
         HttpURLConnection postConnection = (HttpURLConnection) postUrl.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setDoOutput(true);
@@ -61,7 +60,7 @@ public class HttpTaskServerTest {
         Task expectedTask = new Task("Task 1", "Description 1");
         manager.generateTask(expectedTask);
 
-        URL getUrl = new URL("http://localhost:8080/tasks");
+        URL getUrl = new URL("http://localhost:8082/tasks");
         HttpURLConnection getConnection = (HttpURLConnection) getUrl.openConnection();
         getConnection.setRequestMethod("GET");
         assertEquals(200, getConnection.getResponseCode());
@@ -76,7 +75,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testTaskDeleteEndpoint() throws IOException {
-        URL deleteUrl = new URL("http://localhost:8080/tasks");
+        URL deleteUrl = new URL("http://localhost:8082/tasks");
         HttpURLConnection deleteConnection = (HttpURLConnection) deleteUrl.openConnection();
         deleteConnection.setRequestMethod("DELETE");
         assertEquals(204, deleteConnection.getResponseCode());
@@ -86,7 +85,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testSubtaskPostEndpoint() throws IOException {
-        URL postUrl = new URL("http://localhost:8080/subtasks");
+        URL postUrl = new URL("http://localhost:8082/subtasks");
         HttpURLConnection postConnection = (HttpURLConnection) postUrl.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setDoOutput(true);
@@ -125,7 +124,7 @@ public class HttpTaskServerTest {
         subtask1.setDuration(10);
         manager.generateSubtask(subtask1);
 
-        URL getUrl = new URL("http://localhost:8080/subtasks");
+        URL getUrl = new URL("http://localhost:8082/subtasks");
         HttpURLConnection getConnection = (HttpURLConnection) getUrl.openConnection();
         getConnection.setRequestMethod("GET");
         assertEquals(200, getConnection.getResponseCode());
@@ -140,7 +139,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testSubtaskDeleteEndpoint() throws IOException {
-        URL deleteUrl = new URL("http://localhost:8080/subtasks");
+        URL deleteUrl = new URL("http://localhost:8082/subtasks");
         HttpURLConnection deleteConnection = (HttpURLConnection) deleteUrl.openConnection();
         deleteConnection.setRequestMethod("DELETE");
         assertEquals(204, deleteConnection.getResponseCode());
@@ -150,7 +149,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testEpicPostEndpoint() throws IOException {
-        URL postUrl = new URL("http://localhost:8080/epics");
+        URL postUrl = new URL("http://localhost:8082/epics");
         HttpURLConnection postConnection = (HttpURLConnection) postUrl.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setDoOutput(true);
@@ -170,7 +169,7 @@ public class HttpTaskServerTest {
         Epic epic = new Epic("Epic 1", "Description 1");
         manager.generateEpic(epic);
 
-        URL getUrl = new URL("http://localhost:8080/epics");
+        URL getUrl = new URL("http://localhost:8082/epics");
         HttpURLConnection getConnection = (HttpURLConnection) getUrl.openConnection();
         getConnection.setRequestMethod("GET");
         assertEquals(200, getConnection.getResponseCode());
@@ -185,7 +184,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testEpicDeleteEndpoint() throws IOException {
-        URL deleteUrl = new URL("http://localhost:8080/epics");
+        URL deleteUrl = new URL("http://localhost:8082/epics");
         HttpURLConnection deleteConnection = (HttpURLConnection) deleteUrl.openConnection();
         deleteConnection.setRequestMethod("DELETE");
         assertEquals(204, deleteConnection.getResponseCode());
@@ -195,7 +194,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testHistoryGetEndpoint() throws IOException {
-        URL getUrl = new URL("http://localhost:8080/history");
+        URL getUrl = new URL("http://localhost:8082/history");
         HttpURLConnection getConnection = (HttpURLConnection) getUrl.openConnection();
         getConnection.setRequestMethod("GET");
         assertEquals(200, getConnection.getResponseCode());
@@ -203,7 +202,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testHistoryDeleteEndpoint() throws IOException {
-        URL deleteUrl = new URL("http://localhost:8080/history");
+        URL deleteUrl = new URL("http://localhost:8082/history");
         HttpURLConnection deleteConnection = (HttpURLConnection) deleteUrl.openConnection();
         deleteConnection.setRequestMethod("DELETE");
         assertEquals(204, deleteConnection.getResponseCode());
@@ -213,7 +212,7 @@ public class HttpTaskServerTest {
 
     @Test
     public void testHistoryPostEndpoint() throws IOException {
-        URL postUrl = new URL("http://localhost:8080/history");
+        URL postUrl = new URL("http://localhost:8082/history");
         HttpURLConnection postConnection = (HttpURLConnection) postUrl.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setDoOutput(true);

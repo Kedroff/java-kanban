@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HttpTaskServer {
-    public static final int PORT = 8080;
+    public static final int PORT = 8082;
     private final HttpServer server;
     private final Gson gson;
     private final TaskManager taskManager;

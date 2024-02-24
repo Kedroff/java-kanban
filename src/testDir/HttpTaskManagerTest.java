@@ -13,13 +13,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
-    private static KVServer server;;
+    private static KVServer server;
 
     @BeforeEach
     public void setUp() throws IOException {
         server = new KVServer();
         server.start();
-        super.taskManager = new HttpTaskManager(8080, true);
+        super.taskManager = new HttpTaskManager(8082,false);
     }
 
     @AfterEach
@@ -35,7 +35,7 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
         super.taskManager.generateTask(task1);
         super.taskManager.generateTask(task2);
 
-        HttpTaskManager manager = new HttpTaskManager(8080, true);
+        HttpTaskManager manager = new HttpTaskManager(8082,true);
 
         assertEquals(2, manager.getTaskList().size());
         Assertions.assertEquals(task1, manager.getTaskByIdentify(task1.getId()));
@@ -45,7 +45,7 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     @Test
     public void testLoad() {
-        HttpTaskManager manager = new HttpTaskManager(8080);
+        HttpTaskManager manager = new HttpTaskManager(8082,true);
 
         Task task1 = new Task("Task 1", "Description 1");
         Task task2 = new Task("Task 2", "Description 2");
@@ -56,7 +56,7 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
         manager.addTasks(List.of(task1, task2));
         manager.save();
 
-        HttpTaskManager loadedManager = new HttpTaskManager(8080, true);
+        HttpTaskManager loadedManager = new HttpTaskManager(8082, true);
 
         loadedManager.load();
 
@@ -77,7 +77,7 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
         super.taskManager.save();
 
-        HttpTaskManager manager = new HttpTaskManager(8080, true);
+        HttpTaskManager manager = new HttpTaskManager(8082, true);
 
         assertEquals(2, manager.getTaskList().size());
 
@@ -87,8 +87,8 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     @Test
     public void testGetAllTasksAfterLoad() {
-        HttpTaskManager manager = new HttpTaskManager(8080);
-        HttpTaskManager httpTaskManager = new HttpTaskManager(8080, true);
+        HttpTaskManager manager = new HttpTaskManager(8082);
+        HttpTaskManager httpTaskManager = new HttpTaskManager(8082, true);
         httpTaskManager.load();
 
         assertEquals(manager.getTaskList(), httpTaskManager.getTaskList(),
@@ -97,8 +97,8 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     @Test
     public void testGetAllEpicsAfterLoad() {
-        HttpTaskManager manager = new HttpTaskManager(8080);
-        HttpTaskManager httpTaskManager = new HttpTaskManager(8080, true);
+        HttpTaskManager manager = new HttpTaskManager(8082);
+        HttpTaskManager httpTaskManager = new HttpTaskManager(8082, true);
         httpTaskManager.load();
 
         assertEquals(manager.getEpicList(), httpTaskManager.getEpicList(),
@@ -107,8 +107,8 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     @Test
     public void testGetAllSubtasksAfterLoad() {
-        HttpTaskManager manager = new HttpTaskManager(8080);
-        HttpTaskManager httpTaskManager = new HttpTaskManager(8080, true);
+        HttpTaskManager manager = new HttpTaskManager(8082);
+        HttpTaskManager httpTaskManager = new HttpTaskManager(8082, true);
         httpTaskManager.load();
 
         assertEquals(manager.getSubtaskList(), httpTaskManager.getSubtaskList(),
@@ -117,8 +117,8 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     @Test
     public void testGetAllPrioritizedAfterLoad() {
-        HttpTaskManager manager = new HttpTaskManager(8080);
-        HttpTaskManager httpTaskManager = new HttpTaskManager(8080, true);
+        HttpTaskManager manager = new HttpTaskManager(8082);
+        HttpTaskManager httpTaskManager = new HttpTaskManager(8082, true);
         httpTaskManager.load();
 
         assertEquals(manager.getPrioritizedTasks(), httpTaskManager.getPrioritizedTasks(),
@@ -127,8 +127,8 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     @Test
     public void testGetAllHistoryAfterLoad() {
-        HttpTaskManager manager = new HttpTaskManager(8080);
-        HttpTaskManager httpTaskManager = new HttpTaskManager(8080, true);
+        HttpTaskManager manager = new HttpTaskManager(8082);
+        HttpTaskManager httpTaskManager = new HttpTaskManager(8082, true);
         httpTaskManager.load();
 
         assertEquals(manager.getHistory(), httpTaskManager.getHistory(),

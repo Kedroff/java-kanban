@@ -22,27 +22,18 @@ class PrioritizedHandler implements HttpHandler {
         String method = exchange.getRequestMethod();
         if (method.equals("GET")) {
             Gson gson = new Gson();
-            String response = gson.toJson(inMemoryTasksManager.getPrioritizedTasks());
-            exchange.getResponseHeaders().set("Content-Type", "application/json");
-            exchange.sendResponseHeaders(200, response.getBytes(StandardCharsets.UTF_8).length);
-            try (OutputStream os = exchange.getResponseBody()) {
-                os.write(response.getBytes(StandardCharsets.UTF_8));
-            } catch (IOException e) {
-                throw new RuntimeException("Error writing response", e);
-            }
+            writeResponse(exchange, gson.toJson(inMemoryTasksManager.getPrioritizedTasks()), 200);
         } else {
-            exchange.sendResponseHeaders(405, -1);
+            writeResponse(exchange, "Method not allowed", 405);
         }
+        exchange.close();
     }
 
-
-    private void writeResponse(HttpExchange exchange, String response, int statusCode) throws IOException {
+    private void writeResponse(HttpExchange exchange, String responseString, int responseCode) throws IOException {
         exchange.getResponseHeaders().set("Content-Type", "application/json");
-        exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);
+        exchange.sendResponseHeaders(responseCode, 0);
         try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            throw new RuntimeException("Uncaught", e);
+            os.write(responseString.getBytes(StandardCharsets.UTF_8));
         }
     }
 

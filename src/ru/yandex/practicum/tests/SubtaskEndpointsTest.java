@@ -85,7 +85,7 @@ public class SubtaskEndpointsTest {
     }
 
     @Test
-    public void DeleteSubtaskTest() throws IOException, InterruptedException {
+    public void deleteSubtaskTest() throws IOException, InterruptedException {
         URI uri1 = URI.create("http://localhost:8080/epics");
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
         HttpRequest request1 = HttpRequest.newBuilder()

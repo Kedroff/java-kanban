@@ -27,25 +27,23 @@ public class Utils {
     }
 
     public static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
-        private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
         @Override
-        public void write(final JsonWriter jsonWriter, final LocalDateTime localDateTime) throws IOException {
-            if (localDateTime != null) {
-                jsonWriter.value(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
-            } else {
+        public void write(JsonWriter jsonWriter, LocalDateTime localDateTime) throws IOException {
+            if (localDateTime == null) {
                 jsonWriter.nullValue();
+            } else {
+                jsonWriter.value(localDateTime.format(DATE_TIME_FORMATTER));
             }
         }
 
         @Override
-        public LocalDateTime read(final JsonReader jsonReader) throws IOException {
-            String dateStr = jsonReader.nextString();
-            if ("null".equals(dateStr)) {
-                return null;
-            }
-            return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+        public LocalDateTime read(JsonReader jsonReader) throws IOException {
+            String dateTime = jsonReader.nextString();
+            if ("null".equals(dateTime)) return null;
+            return LocalDateTime.parse(dateTime, DATE_TIME_FORMATTER);
         }
-
     }
 }

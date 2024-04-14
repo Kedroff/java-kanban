@@ -1,13 +1,16 @@
 package ru.yandex.practicum.http;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.practicum.managers.taskManager.InMemoryTasksManager;
+import ru.yandex.practicum.utils.Utils;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 class PrioritizedHandler implements HttpHandler {
@@ -21,7 +24,9 @@ class PrioritizedHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         if (method.equals("GET")) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(LocalDateTime.class, new Utils.LocalDateTimeAdapter())
+                    .create();
             writeResponse(exchange, gson.toJson(inMemoryTasksManager.getPrioritizedTasks()), 200);
         } else {
             writeResponse(exchange, "Method not allowed", 405);
@@ -30,6 +35,7 @@ class PrioritizedHandler implements HttpHandler {
     }
 
     private void writeResponse(HttpExchange exchange, String responseString, int responseCode) throws IOException {
+        System.out.println("Sending response with code " + responseCode + ": " + responseString);
         exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.sendResponseHeaders(responseCode, 0);
         try (OutputStream os = exchange.getResponseBody()) {

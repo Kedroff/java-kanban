@@ -2,7 +2,6 @@ package ru.yandex.practicum.utils;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -33,24 +32,20 @@ public class Utils {
         @Override
         public void write(final JsonWriter jsonWriter, final LocalDateTime localDateTime) throws IOException {
             if (localDateTime != null) {
-                jsonWriter.value(localDateTime.format(dtf));
+                jsonWriter.value(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
             } else {
-                jsonWriter.value("null");
+                jsonWriter.nullValue();
             }
         }
 
         @Override
         public LocalDateTime read(final JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
+            String dateStr = jsonReader.nextString();
+            if ("null".equals(dateStr)) {
                 return null;
-            } else {
-                String dateStr = jsonReader.nextString();
-                if ("null".equals(dateStr)) {
-                    return null;
-                }
-                return LocalDateTime.parse(dateStr, dtf);
             }
+            return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
         }
+
     }
 }

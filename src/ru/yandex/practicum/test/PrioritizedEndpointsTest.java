@@ -1,4 +1,4 @@
-package ru.yandex.practicum.tests;
+package ru.yandex.practicum.test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
 
 import static java.time.Month.AUGUST;
 
-public class SubtaskEndpointsTest {
+public class PrioritizedEndpointsTest {
     private HttpTaskServer httpTaskServer;
     private HttpClient client;
-    private static final String DEFAULT_SUBTASK_URI = "http://localhost:8080/subtasks";
+    private static final String DEFAULT_PRIORITIZED_URI = "http://localhost:8080/prioritized";
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new Utils.LocalDateTimeAdapter())
             .create();
@@ -41,8 +41,8 @@ public class SubtaskEndpointsTest {
     }
 
     @Test
-    public void getEmptyListSubtasksTest() throws IOException, InterruptedException {
-        URI uri = URI.create(DEFAULT_SUBTASK_URI);
+    public void getEmptyPrioritizedListTest() throws IOException, InterruptedException {
+        URI uri = URI.create(DEFAULT_PRIORITIZED_URI);
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)
@@ -52,7 +52,7 @@ public class SubtaskEndpointsTest {
     }
 
     @Test
-    public void addSubtasksAndGetItTest() throws IOException, InterruptedException {
+    public void getPrioritizedListTest() throws IOException, InterruptedException {
         URI uri1 = URI.create("http://localhost:8080/epics");
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
         HttpRequest request1 = HttpRequest.newBuilder()
@@ -63,7 +63,7 @@ public class SubtaskEndpointsTest {
         HttpResponse<String> response1 = client.send(request1, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response1.statusCode(), "Not right response");
 
-        URI uri2 = URI.create(DEFAULT_SUBTASK_URI);
+        URI uri2 = URI.create("http://localhost:8080/subtasks");
         Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", 1,
                 LocalDateTime.of(2023, AUGUST, 28, 13, 0), 60);
         HttpRequest request2 = HttpRequest.newBuilder()
@@ -75,45 +75,20 @@ public class SubtaskEndpointsTest {
         Assertions.assertEquals(200, response2.statusCode(), "Not right response");
 
 
-        URI uri3 = URI.create(DEFAULT_SUBTASK_URI);
+        URI uri3 = URI.create("http://localhost:8080/subtasks");
         HttpRequest request3 = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri3)
                 .build();
         HttpResponse<String> response3 = client.send(request3, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response3.statusCode(), "Not right response");
-    }
 
-    @Test
-    public void deleteSubtaskTest() throws IOException, InterruptedException {
-        URI uri1 = URI.create("http://localhost:8080/epics");
-        Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
-        HttpRequest request1 = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(epic1)))
-                .header("Content-Type", "application/json")
-                .uri(uri1)
+        URI uri4 = URI.create(DEFAULT_PRIORITIZED_URI);
+        HttpRequest request4 = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri4)
                 .build();
-        HttpResponse<String> response1 = client.send(request1, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(200, response1.statusCode(), "Not right response");
-
-        URI uri2 = URI.create(DEFAULT_SUBTASK_URI);
-        Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", 1,
-                LocalDateTime.of(2023, AUGUST, 28, 13, 0), 60);
-        HttpRequest request2 = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(subtask11)))
-                .header("Content-Type", "application/json")
-                .uri(uri2)
-                .build();
-        HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(200, response2.statusCode(), "Not right response");
-
-        URI uri3 = URI.create(DEFAULT_SUBTASK_URI + "/1");
-        HttpRequest request3 = HttpRequest.newBuilder()
-                .DELETE()
-                .header("Content-Type", "application/json")
-                .uri(uri2)
-                .build();
-        HttpResponse<String> response3 = client.send(request3, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(201, response3.statusCode(), "Not right response");
+        HttpResponse<String> response4 = client.send(request4, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(200, response4.statusCode(), "Not right response");
     }
 }

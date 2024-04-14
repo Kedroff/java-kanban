@@ -23,11 +23,18 @@ class PrioritizedHandler implements HttpHandler {
         if (method.equals("GET")) {
             Gson gson = new Gson();
             String response = gson.toJson(inMemoryTasksManager.getPrioritizedTasks());
-            writeResponse(exchange, response, 200);
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, response.getBytes(StandardCharsets.UTF_8).length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                throw new RuntimeException("Error writing response", e);
+            }
         } else {
-            writeResponse(exchange, "Method not allowed", 405);
+            exchange.sendResponseHeaders(405, -1);
         }
     }
+
 
     private void writeResponse(HttpExchange exchange, String response, int statusCode) throws IOException {
         exchange.getResponseHeaders().set("Content-Type", "application/json");

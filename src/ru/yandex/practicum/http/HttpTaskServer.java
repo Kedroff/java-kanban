@@ -23,7 +23,8 @@ public class HttpTaskServer {
     private static final int PORT = 8080;
     InMemoryTasksManager inMemoryTasksManager;
     HttpServer httpServer;
-    public HttpTaskServer() throws IOException{
+
+    public HttpTaskServer() throws IOException {
         this.inMemoryTasksManager = new InMemoryTasksManager();
         this.httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TasksHandler(inMemoryTasksManager));
@@ -41,6 +42,7 @@ public class HttpTaskServer {
 
 class TasksHandler implements HttpHandler {
     InMemoryTasksManager inMemoryTasksManager;
+
     public TasksHandler(InMemoryTasksManager inMemoryTasksManager) {
         this.inMemoryTasksManager = inMemoryTasksManager;
     }
@@ -48,7 +50,7 @@ class TasksHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
-        switch (method){
+        switch (method) {
             case "GET":
                 getTaskOrTasks(exchange);
                 break;
@@ -93,7 +95,7 @@ class TasksHandler implements HttpHandler {
         InputStream inputStream = exchange.getRequestBody();
         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         JsonElement jsonElement = JsonParser.parseString(body);
-        if(!jsonElement.isJsonObject()) {
+        if (!jsonElement.isJsonObject()) {
             HandlerUtils.writeResponse(exchange, "Not Acceptable", 406);
             return;
         }
@@ -129,7 +131,7 @@ class TasksHandler implements HttpHandler {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         if (splitPath.length == 2) {
             inMemoryTasksManager.deleteAllTasks();
-            try (OutputStream os = exchange.getResponseBody()){
+            try (OutputStream os = exchange.getResponseBody()) {
                 exchange.sendResponseHeaders(201, 0);
             }
             return;
@@ -138,7 +140,7 @@ class TasksHandler implements HttpHandler {
             if (taskIdOptional.isPresent()) {
                 if (inMemoryTasksManager.getTaskByID(taskIdOptional.get()) != null) {
                     inMemoryTasksManager.deleteTaskByID(taskIdOptional.get());
-                    try (OutputStream os = exchange.getResponseBody()){
+                    try (OutputStream os = exchange.getResponseBody()) {
                         exchange.sendResponseHeaders(201, 0);
                     }
                     return;
@@ -151,6 +153,7 @@ class TasksHandler implements HttpHandler {
 
 class SubtasksHandler implements HttpHandler {
     InMemoryTasksManager inMemoryTasksManager;
+
     public SubtasksHandler(InMemoryTasksManager inMemoryTasksManager) {
         this.inMemoryTasksManager = inMemoryTasksManager;
     }
@@ -158,7 +161,7 @@ class SubtasksHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
-        switch (method){
+        switch (method) {
             case "GET":
                 getSubtaskOrSubtasks(exchange);
                 break;
@@ -203,7 +206,7 @@ class SubtasksHandler implements HttpHandler {
         InputStream inputStream = exchange.getRequestBody();
         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         JsonElement jsonElement = JsonParser.parseString(body);
-        if(!jsonElement.isJsonObject()) {
+        if (!jsonElement.isJsonObject()) {
             HandlerUtils.writeResponse(exchange, "Not Acceptable", 406);
             return;
         }
@@ -242,7 +245,7 @@ class SubtasksHandler implements HttpHandler {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         if (splitPath.length == 2) {
             inMemoryTasksManager.deleteAllSubtasks();
-            try (OutputStream os = exchange.getResponseBody()){
+            try (OutputStream os = exchange.getResponseBody()) {
                 exchange.sendResponseHeaders(201, 0);
             }
             return;
@@ -251,7 +254,7 @@ class SubtasksHandler implements HttpHandler {
             if (subtaskIdOptional.isPresent()) {
                 if (inMemoryTasksManager.getSubtasksByID(subtaskIdOptional.get()) != null) {
                     inMemoryTasksManager.deleteSubtaskByID(subtaskIdOptional.get());
-                    try (OutputStream os = exchange.getResponseBody()){
+                    try (OutputStream os = exchange.getResponseBody()) {
                         exchange.sendResponseHeaders(201, 0);
                     }
                     return;
@@ -264,13 +267,15 @@ class SubtasksHandler implements HttpHandler {
 
 class EpicsHandler implements HttpHandler {
     InMemoryTasksManager inMemoryTasksManager;
+
     public EpicsHandler(InMemoryTasksManager inMemoryTasksManager) {
         this.inMemoryTasksManager = inMemoryTasksManager;
     }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
-        switch (method){
+        switch (method) {
             case "GET":
                 getEpicOrEpicsOrEpicSubtasks(exchange);
                 break;
@@ -318,7 +323,7 @@ class EpicsHandler implements HttpHandler {
         HandlerUtils.writeResponse(exchange, "Not found", 404);
     }
 
-    public void addOrUpdateEpic(HttpExchange exchange) throws IOException{
+    public void addOrUpdateEpic(HttpExchange exchange) throws IOException {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new Utils.LocalDateTimeAdapter())
@@ -326,7 +331,7 @@ class EpicsHandler implements HttpHandler {
         InputStream inputStream = exchange.getRequestBody();
         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         JsonElement jsonElement = JsonParser.parseString(body);
-        if(!jsonElement.isJsonObject()) {
+        if (!jsonElement.isJsonObject()) {
             HandlerUtils.writeResponse(exchange, "Not Acceptable", 406);
             System.out.println(1);
             return;
@@ -359,11 +364,11 @@ class EpicsHandler implements HttpHandler {
         HandlerUtils.writeResponse(exchange, "Not found", 404);
     }
 
-    public void deleteEpicOrEpics(HttpExchange exchange) throws IOException{
+    public void deleteEpicOrEpics(HttpExchange exchange) throws IOException {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         if (splitPath.length == 2) {
             inMemoryTasksManager.deleteAllEpics();
-            try (OutputStream os = exchange.getResponseBody()){
+            try (OutputStream os = exchange.getResponseBody()) {
                 exchange.sendResponseHeaders(201, 0);
             }
             return;
@@ -372,7 +377,7 @@ class EpicsHandler implements HttpHandler {
             if (epicIdOptional.isPresent()) {
                 if (inMemoryTasksManager.getEpicByID(epicIdOptional.get()) != null) {
                     inMemoryTasksManager.deleteEpicByID(epicIdOptional.get());
-                    try (OutputStream os = exchange.getResponseBody()){
+                    try (OutputStream os = exchange.getResponseBody()) {
                         exchange.sendResponseHeaders(201, 0);
                     }
                     return;
@@ -385,9 +390,11 @@ class EpicsHandler implements HttpHandler {
 
 class HistoryHandler implements HttpHandler {
     InMemoryTasksManager inMemoryTasksManager;
+
     public HistoryHandler(InMemoryTasksManager inMemoryTasksManager) {
         this.inMemoryTasksManager = inMemoryTasksManager;
     }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
@@ -404,9 +411,11 @@ class HistoryHandler implements HttpHandler {
 
 class PrioritizedHandler implements HttpHandler {
     InMemoryTasksManager inMemoryTasksManager;
+
     public PrioritizedHandler(InMemoryTasksManager inMemoryTasksManager) {
         this.inMemoryTasksManager = inMemoryTasksManager;
     }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
@@ -421,8 +430,8 @@ class PrioritizedHandler implements HttpHandler {
 }
 
 class HandlerUtils {
-    protected static void writeResponse(HttpExchange exchange, String responseString, int responseCode) throws  IOException{
-        try (OutputStream os = exchange.getResponseBody()){
+    protected static void writeResponse(HttpExchange exchange, String responseString, int responseCode) throws IOException {
+        try (OutputStream os = exchange.getResponseBody()) {
             exchange.sendResponseHeaders(responseCode, 0);
             os.write(responseString.getBytes(StandardCharsets.UTF_8));
         }

@@ -2,11 +2,11 @@ package ru.yandex.practicum.tests;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.yandex.practicum.http.HttpTaskServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.http.HttpTaskServer;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.utils.Utils;
@@ -27,6 +27,7 @@ public class PrioritizedEndpointsTest {
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new Utils.LocalDateTimeAdapter())
             .create();
+
     @BeforeEach
     public void startServer() throws IOException {
         httpTaskServer = new HttpTaskServer();
@@ -64,7 +65,7 @@ public class PrioritizedEndpointsTest {
 
         URI uri2 = URI.create("http://localhost:8080/subtasks");
         Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", 1,
-                LocalDateTime.of(2023, AUGUST,28,13, 0), 60);
+                LocalDateTime.of(2023, AUGUST, 28, 13, 0), 60);
         HttpRequest request2 = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(subtask11)))
                 .header("Content-Type", "application/json")

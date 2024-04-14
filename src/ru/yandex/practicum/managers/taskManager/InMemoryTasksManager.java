@@ -1,15 +1,18 @@
 package ru.yandex.practicum.managers.taskManager;
 
-import java.util.stream.Collectors;
 import ru.yandex.practicum.exceptionPackage.TaskInputDateException;
+import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.managers.historyManager.HistoryManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 import ru.yandex.practicum.tasks.TaskStatuses;
-import ru.yandex.practicum.managers.Managers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 
 public class InMemoryTasksManager implements TaskManager {
@@ -212,7 +215,7 @@ public class InMemoryTasksManager implements TaskManager {
         if (subtasksMap.containsKey(id)) {
             historyManager.remove(id);
             ArrayList<Integer> newSubtasksIds = epicsMap.get(subtasksMap.get(id).getIdOfEpic()).getSubtasksIds();
-            newSubtasksIds.remove(newSubtasksIds.indexOf(id));
+            newSubtasksIds.remove((Integer) id);
             epicsMap.get(subtasksMap.get(id).getIdOfEpic()).setSubtasksIds(newSubtasksIds);
             changeEpicStatus(epicsMap.get(subtasksMap.get(id).getIdOfEpic()));
             Epic temp = epicsMap.get(subtasksMap.get(id).getIdOfEpic());
@@ -273,7 +276,7 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public void deleteEpicByID(int id) {
         if (epicsMap.containsKey(id)) {
-            for(int idOfSubtasks : epicsMap.get(id).getSubtasksIds()) {
+            for (int idOfSubtasks : epicsMap.get(id).getSubtasksIds()) {
                 historyManager.remove(idOfSubtasks);
                 subtasksMap.remove(idOfSubtasks);
             }
@@ -283,7 +286,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Subtask> getAllEpicSubtasks (int epicID) {
+    public ArrayList<Subtask> getAllEpicSubtasks(int epicID) {
         if (!epicsMap.containsKey(epicID)) {
             return null;
         }
@@ -305,10 +308,10 @@ public class InMemoryTasksManager implements TaskManager {
             }
         });
 
-        for(Map.Entry<Integer, Task> entry : tasksMap.entrySet()) {
+        for (Map.Entry<Integer, Task> entry : tasksMap.entrySet()) {
             priorityList.add(entry.getValue());
         }
-        for(Map.Entry<Integer, Subtask> entry : subtasksMap.entrySet()) {
+        for (Map.Entry<Integer, Subtask> entry : subtasksMap.entrySet()) {
             priorityList.add(entry.getValue());
         }
         return new ArrayList<>(priorityList);
@@ -321,7 +324,7 @@ public class InMemoryTasksManager implements TaskManager {
         }
         int counterOfDone = 0;
         int counterOfNew = 0;
-        for(int idOfSubtask : epic.getSubtasksIds()) {
+        for (int idOfSubtask : epic.getSubtasksIds()) {
             if (subtasksMap.get(idOfSubtask).getStatus().equals(TaskStatuses.IN_PROGRESS)) {
                 epic.setStatus(TaskStatuses.IN_PROGRESS);
                 return;
@@ -336,8 +339,7 @@ public class InMemoryTasksManager implements TaskManager {
             epic.setStatus(TaskStatuses.DONE);
         } else if (counterOfNew == epic.getSubtasksIds().size()) {
             epic.setStatus(TaskStatuses.NEW);
-        }
-        else if (counterOfDone > 0 && counterOfNew > 0) {
+        } else if (counterOfDone > 0 && counterOfNew > 0) {
             epic.setStatus(TaskStatuses.IN_PROGRESS);
         }
     }
@@ -348,7 +350,7 @@ public class InMemoryTasksManager implements TaskManager {
 
         } else {
             int epicDuration = 0;
-            for(int id : epic.getSubtasksIds()) {
+            for (int id : epic.getSubtasksIds()) {
                 epicDuration += subtasksMap.get(id).getDuration();
             }
             epic.setDuration(epicDuration);
@@ -362,7 +364,7 @@ public class InMemoryTasksManager implements TaskManager {
 
         epic.setStartTime(subtasksMap.get(epic.getSubtasksIds().get(0)).getStartTime());
         epic.setEndTime(subtasksMap.get(epic.getSubtasksIds().get(0)).getEndTime());
-        for(Integer id : epic.getSubtasksIds()) {
+        for (Integer id : epic.getSubtasksIds()) {
             if (epic.getStartTime().isAfter(subtasksMap.get(id).getStartTime())) {
                 epic.setStartTime(subtasksMap.get(id).getStartTime());
             }

@@ -1,8 +1,8 @@
 package ru.yandex.practicum.tests;
 
-import ru.yandex.practicum.managers.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.tasks.Task;
 
 import java.time.LocalDateTime;
@@ -14,9 +14,9 @@ public class SameTimeOfTasksTest {
     @Test
     public void sameTimeOfTasksTest() {
         Task task1 = new Task("Read book every day", "30 pages",
-                LocalDateTime.of(2024, MAY,13,13, 0), 1440);
+                LocalDateTime.of(2024, MAY, 13, 13, 0), 1440);
         Task task2 = new Task("jump every day", "30 iterations",
-                LocalDateTime.of(2024, MAY,14,13, 0), 60);
+                LocalDateTime.of(2024, MAY, 14, 13, 0), 60);
         Managers.getDefault().addNewTask(task1);
         Managers.getDefault().addNewTask(task2);
         Managers.getDefault().getAllTasks();

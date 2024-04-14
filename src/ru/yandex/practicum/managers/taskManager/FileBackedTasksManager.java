@@ -1,17 +1,17 @@
 package ru.yandex.practicum.managers.taskManager;
 
 import ru.yandex.practicum.exceptionPackage.ManagerSaveException;
+import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.managers.historyManager.HistoryManager;
 import ru.yandex.practicum.tasks.*;
 import ru.yandex.practicum.utils.Utils;
-import ru.yandex.practicum.managers.Managers;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class  FileBackedTasksManager extends InMemoryTasksManager implements TaskManager {
+public class FileBackedTasksManager extends InMemoryTasksManager implements TaskManager {
     public final File file;
 
     public FileBackedTasksManager(File file) {
@@ -20,16 +20,16 @@ public class  FileBackedTasksManager extends InMemoryTasksManager implements Tas
     }
 
     private void save() throws ManagerSaveException {
-        try ( Writer fileWriter = new FileWriter(file.getPath())) {
+        try (Writer fileWriter = new FileWriter(file.getPath())) {
             fileWriter.write("id,type,name,status,description,startTime,duration,epic\n");
 
-            for(Map.Entry<Integer, Task> entry : tasksMap.entrySet()) {
+            for (Map.Entry<Integer, Task> entry : tasksMap.entrySet()) {
                 fileWriter.write(entry.getValue().taskToString() + "\n");
             }
-            for(Map.Entry<Integer, Epic> entry : epicsMap.entrySet()) {
+            for (Map.Entry<Integer, Epic> entry : epicsMap.entrySet()) {
                 fileWriter.write(entry.getValue().taskToString() + "\n");
             }
-            for(Map.Entry<Integer, Subtask> entry : subtasksMap.entrySet()) {
+            for (Map.Entry<Integer, Subtask> entry : subtasksMap.entrySet()) {
                 fileWriter.write(entry.getValue().taskToString() + "\n");
             }
 
@@ -53,7 +53,7 @@ public class  FileBackedTasksManager extends InMemoryTasksManager implements Tas
             Epic epic = new Epic(line[2], line[4]);
             epic.setID(Integer.parseInt(line[0]));
             epic.setStatus(TaskStatuses.valueOf(line[3]));
-            if (!line[5].isEmpty()){
+            if (!line[5].isEmpty()) {
                 epic.setStartTime(Utils.formattedTime(LocalDateTime.parse(line[5])));
                 epic.setDuration(Integer.parseInt(line[6]));
                 epic.setEndTime(epic.getStartTime().plusMinutes(epic.getDuration()));
@@ -90,21 +90,21 @@ public class  FileBackedTasksManager extends InMemoryTasksManager implements Tas
         return historyList;
     }
 
-    public static FileBackedTasksManager loadFromFile(File file){
+    public static FileBackedTasksManager loadFromFile(File file) {
         try {
             Reader fileReader = new FileReader(file.getPath());
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
             String line = bufferedReader.readLine();
-            while(bufferedReader.ready()) {
+            while (bufferedReader.ready()) {
                 line = bufferedReader.readLine();
                 if (line.isEmpty()) {
                     continue;
                 }
                 if (Utils.isNumber(line.split(",")[1])) {
                     ArrayList<Integer> history = historyFromString(line);
-                    for(int id = history.size() - 1; id > -1; id-- ) {
+                    for (int id = history.size() - 1; id > -1; id--) {
                         if (fileBackedTasksManager.tasksMap.containsKey(history.get(id))) {
                             fileBackedTasksManager.getTaskByID(history.get(id));
                         } else if (fileBackedTasksManager.epicsMap.containsKey(history.get(id))) {
@@ -210,7 +210,7 @@ public class  FileBackedTasksManager extends InMemoryTasksManager implements Tas
     public Subtask updateSubtask(Subtask newSubtask) {
         Subtask returnableSubtask = super.updateSubtask(newSubtask);
         save();
-        return  returnableSubtask;
+        return returnableSubtask;
     }
 
     @Override

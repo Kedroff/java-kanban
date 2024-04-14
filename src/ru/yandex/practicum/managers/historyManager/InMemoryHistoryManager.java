@@ -10,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public Node<Task> head = null;
     public Node<Task> tail = null;
     private int size = 0;
-    private Map<Integer, Node<Task>> customLinkedList = new HashMap<>();
+    private final Map<Integer, Node<Task>> customLinkedList = new HashMap<>();
 
     @Override
     public void add(Task task) {
@@ -68,7 +68,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node<Task> node) {
-        if (head == node && tail == node){
+        if (head == node && tail == node) {
             head = null;
             tail = null;
         } else if (head == node) {

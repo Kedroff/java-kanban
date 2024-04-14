@@ -2,11 +2,11 @@ package ru.yandex.practicum.tests;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.yandex.practicum.http.HttpTaskServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.http.HttpTaskServer;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.utils.Utils;
 
@@ -24,6 +24,7 @@ public class EpicEndpointsTest {
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new Utils.LocalDateTimeAdapter())
             .create();
+
     @BeforeEach
     public void startServer() throws IOException {
         httpTaskServer = new HttpTaskServer();

@@ -1,11 +1,13 @@
 package ru.yandex.practicum.tests;
 
-import ru.yandex.practicum.managers.Managers;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.tasks.Task;
+
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class HistoryManagerTest {
     @Test

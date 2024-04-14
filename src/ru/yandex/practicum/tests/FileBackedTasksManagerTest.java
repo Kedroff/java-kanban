@@ -1,8 +1,8 @@
 package ru.yandex.practicum.tests;
 
+import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.managers.taskManager.FileBackedTasksManager;
-import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
@@ -10,11 +10,10 @@ import ru.yandex.practicum.tasks.Task;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Map;
 
 import static java.time.Month.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.yandex.practicum.managers.taskManager.FileBackedTasksManager.loadFromFile;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTasksManagerTest {
     @Test
@@ -22,28 +21,28 @@ public class FileBackedTasksManagerTest {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
         Task task1 = new Task("Read book every day", "30 pages",
-                LocalDateTime.of(2024, MARCH,28,13, 0), 60);
+                LocalDateTime.of(2024, MARCH, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task1);
         Task task2 = new Task("jump every day", "30 iterations",
-                LocalDateTime.of(2024, APRIL,28,13, 0), 60);
+                LocalDateTime.of(2024, APRIL, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task2);
         Task task3 = new Task("Eat every day", "3 iterations",
-                LocalDateTime.of(2024, MAY,28,13, 0), 60);
+                LocalDateTime.of(2024, MAY, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task3);
 
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
         fileBackedTasksManager1.addNewEpic(epic1);
         Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", epic1.getID(),
-                LocalDateTime.of(2023, AUGUST,28,13, 0), 60);
+                LocalDateTime.of(2023, AUGUST, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewSubtask(subtask11);
         Subtask subtask12 = new Subtask("купить одежду", "крутую одежду", epic1.getID(),
-                LocalDateTime.of(2023, SEPTEMBER,28,13, 0), 60);
+                LocalDateTime.of(2023, SEPTEMBER, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewSubtask(subtask12);
 
         Epic epic2 = new Epic("посмотреть кино", "обязательно до конца месяца");
         fileBackedTasksManager1.addNewEpic(epic2);
         Subtask subtask21 = new Subtask("найти кино", "в хорошем качестве", epic2.getID(),
-                LocalDateTime.of(2023, DECEMBER,28,13, 0), 60);
+                LocalDateTime.of(2023, DECEMBER, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewSubtask(subtask21);
 
         fileBackedTasksManager1.getTaskByID(task1.getID());
@@ -103,13 +102,13 @@ public class FileBackedTasksManagerTest {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
         Task task1 = new Task("Read book every day", "30 pages",
-                LocalDateTime.of(2024, MAY,28,13, 0), 60);
+                LocalDateTime.of(2024, MAY, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task1);
         Task task2 = new Task("jump every day", "30 iterations",
-                LocalDateTime.of(2024, APRIL,28,13, 0), 1440);
+                LocalDateTime.of(2024, APRIL, 28, 13, 0), 1440);
         fileBackedTasksManager1.addNewTask(task2);
         Task task3 = new Task("Eat every day", "3 iterations",
-                LocalDateTime.of(2024, AUGUST,28,13, 0), 21440);
+                LocalDateTime.of(2024, AUGUST, 28, 13, 0), 21440);
         fileBackedTasksManager1.addNewTask(task3);
 
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
@@ -208,28 +207,28 @@ public class FileBackedTasksManagerTest {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
         Task task1 = new Task("Read book every day", "30 pages",
-                LocalDateTime.of(2024, MARCH,28,13, 0), 60);
+                LocalDateTime.of(2024, MARCH, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task1);
         Task task2 = new Task("jump every day", "30 iterations",
-                LocalDateTime.of(2024, APRIL,28,13, 0), 60);
+                LocalDateTime.of(2024, APRIL, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task2);
         Task task3 = new Task("Eat every day", "3 iterations",
-                LocalDateTime.of(2024, MAY,28,13, 0), 60);
+                LocalDateTime.of(2024, MAY, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task3);
 
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
         fileBackedTasksManager1.addNewEpic(epic1);
         Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", epic1.getID(),
-                LocalDateTime.of(2023, AUGUST,28,13, 0), 60);
+                LocalDateTime.of(2023, AUGUST, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewSubtask(subtask11);
         Subtask subtask12 = new Subtask("купить одежду", "крутую одежду", epic1.getID(),
-                LocalDateTime.of(2023, SEPTEMBER,28,13, 0), 60);
+                LocalDateTime.of(2023, SEPTEMBER, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewSubtask(subtask12);
 
         Epic epic2 = new Epic("посмотреть кино", "обязательно до конца месяца");
         fileBackedTasksManager1.addNewEpic(epic2);
         Subtask subtask21 = new Subtask("найти кино", "в хорошем качестве", epic2.getID(),
-                LocalDateTime.of(2023, DECEMBER,28,13, 0), 60);
+                LocalDateTime.of(2023, DECEMBER, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewSubtask(subtask21);
 
         fileBackedTasksManager1.getTaskByID(task1.getID());

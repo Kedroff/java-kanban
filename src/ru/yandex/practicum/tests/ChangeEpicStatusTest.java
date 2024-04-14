@@ -1,16 +1,16 @@
 package ru.yandex.practicum.tests;
 
-import ru.yandex.practicum.managers.Managers;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.TaskStatuses;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ChangeEpicStatusTest {
     @Test
-    public void emptyListOfSubtasks(){
+    public void emptyListOfSubtasks() {
         Epic epic = new Epic("посмотреть кино", "обязательно до конца месяца");
         Managers.getDefault().addNewEpic(epic);
         assertEquals(TaskStatuses.NEW, epic.getStatus());
@@ -18,7 +18,7 @@ class ChangeEpicStatusTest {
     }
 
     @Test
-    public void listOfSubtasksWithStatusNew(){
+    public void listOfSubtasksWithStatusNew() {
         Epic epic = new Epic("Съездить в Москву", "обязательно до лета");
         Managers.getDefault().addNewEpic(epic);
         Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", epic.getID(), TaskStatuses.NEW);

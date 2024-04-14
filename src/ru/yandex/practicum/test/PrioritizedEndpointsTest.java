@@ -66,19 +66,30 @@ public class PrioritizedEndpointsTest {
         Assertions.assertEquals(200, response1.statusCode(), "Not right response");
 
         URI uri2 = URI.create("http://localhost:8080/subtasks");
-        Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", 1, LocalDateTime.of(2023, AUGUST, 28, 13, 0), 60);
-        HttpRequest request2 = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(gson.toJson(subtask11))).header("Content-Type", "application/json").uri(uri2).build();
+        Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", 1,
+                LocalDateTime.of(2023, AUGUST, 28, 13, 0), 60);
+        HttpRequest request2 = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(subtask11)))
+                .header("Content-Type", "application/json")
+                .uri(uri2)
+                .build();
         HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response2.statusCode(), "Not right response");
 
 
         URI uri3 = URI.create("http://localhost:8080/subtasks");
-        HttpRequest request3 = HttpRequest.newBuilder().GET().uri(uri3).build();
+        HttpRequest request3 = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri3)
+                .build();
         HttpResponse<String> response3 = client.send(request3, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response3.statusCode(), "Not right response");
 
         URI uri4 = URI.create(DEFAULT_PRIORITIZED_URI);
-        HttpRequest request4 = HttpRequest.newBuilder().GET().uri(uri4).build();
+        HttpRequest request4 = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri4)
+                .build();
         HttpResponse<String> response4 = client.send(request4, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response4.statusCode(), "Not right response");
 

@@ -7,6 +7,7 @@ import ru.yandex.practicum.managers.taskManager.InMemoryTasksManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 class PrioritizedHandler implements HttpHandler {
@@ -30,9 +31,9 @@ class PrioritizedHandler implements HttpHandler {
 
     private void writeResponse(HttpExchange exchange, String responseString, int responseCode) throws IOException {
         exchange.getResponseHeaders().set("Content-Type", "application/json");
-        exchange.sendResponseHeaders(responseCode, responseString.getBytes().length);
+        exchange.sendResponseHeaders(responseCode, 0);
         try (OutputStream os = exchange.getResponseBody()) {
-            os.write(responseString.getBytes());
+            os.write(responseString.getBytes(StandardCharsets.UTF_8));
         }
     }
 

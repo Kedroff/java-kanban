@@ -7,7 +7,6 @@ import ru.yandex.practicum.managers.taskManager.InMemoryTasksManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 class PrioritizedHandler implements HttpHandler {
@@ -24,17 +23,19 @@ class PrioritizedHandler implements HttpHandler {
             Gson gson = new Gson();
             writeResponse(exchange, gson.toJson(inMemoryTasksManager.getPrioritizedTasks()), 200);
         } else {
-            writeResponse(exchange, "Method not allowed", 405); // Изменено: сообщение об ошибке
+            writeResponse(exchange, "Method not allowed", 405);
         }
         exchange.close();
     }
 
     private void writeResponse(HttpExchange exchange, String responseString, int responseCode) throws IOException {
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.sendResponseHeaders(responseCode, responseString.getBytes().length);
         try (OutputStream os = exchange.getResponseBody()) {
-            exchange.sendResponseHeaders(responseCode, 0);
-            os.write(responseString.getBytes(StandardCharsets.UTF_8));
+            os.write(responseString.getBytes());
         }
     }
+
 
     private Optional<Integer> getTaskId(HttpExchange exchange) {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");

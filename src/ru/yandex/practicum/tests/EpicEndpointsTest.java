@@ -70,7 +70,7 @@ public class EpicEndpointsTest {
     }
 
     @Test
-    public void DeleteEpicTest() throws IOException, InterruptedException {
+    public void deleteEpicTest() throws IOException, InterruptedException {
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
         URI uri1 = URI.create(DEFAULT_EPICS_URI);
         HttpRequest request1 = HttpRequest.newBuilder()

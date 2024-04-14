@@ -73,7 +73,7 @@ public class TaskEndpointsTest {
     }
 
     @Test
-    public void DeleteTaskTest() throws IOException, InterruptedException {
+    public void deleteTaskTest() throws IOException, InterruptedException {
         TaskModel task1 = new TaskModel("Read book every day", "30 pages",
                 LocalDateTime.of(2024, MARCH, 28, 13, 0), 60);
         URI uri1 = URI.create(DEFAULT_TASKS_URI);

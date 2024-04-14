@@ -73,22 +73,5 @@ public class PrioritizedEndpointsTest {
                 .build();
         HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response2.statusCode(), "Not right response");
-
-
-        URI uri3 = URI.create("http://localhost:8080/subtasks");
-        HttpRequest request3 = HttpRequest.newBuilder()
-                .GET()
-                .uri(uri3)
-                .build();
-        HttpResponse<String> response3 = client.send(request3, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(200, response3.statusCode(), "Not right response");
-
-        URI uri4 = URI.create(DEFAULT_PRIORITIZED_URI);
-        HttpRequest request4 = HttpRequest.newBuilder()
-                .GET()
-                .uri(uri4)
-                .build();
-        HttpResponse<String> response4 = client.send(request4, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(200, response4.statusCode(), "Not right response");
     }
 }

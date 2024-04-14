@@ -24,7 +24,7 @@ class PrioritizedHandler implements HttpHandler {
             Gson gson = new Gson();
             writeResponse(exchange, gson.toJson(inMemoryTasksManager.getPrioritizedTasks()), 200);
         } else {
-            writeResponse(exchange, "Method not found", 405);
+            writeResponse(exchange, "Method not allowed", 405); // Изменено: сообщение об ошибке
         }
         exchange.close();
     }

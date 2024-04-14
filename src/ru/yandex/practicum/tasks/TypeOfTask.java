@@ -1,6 +1,6 @@
 package ru.yandex.practicum.tasks;
 
-public enum TaskType {
+public enum TypeOfTask {
     TASK,
     EPIC,
     SUBTASK

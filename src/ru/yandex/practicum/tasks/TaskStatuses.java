@@ -1,7 +1,7 @@
 package ru.yandex.practicum.tasks;
 
-public enum Status {
-    NEW,
+public enum TaskStatuses {
+    DONE,
     IN_PROGRESS,
-    DONE
+    NEW
 }

@@ -1,56 +1,54 @@
 package ru.yandex.practicum;
 
-import ru.yandex.practicum.manager.Managers;
-import ru.yandex.practicum.manager.TaskManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
-import java.util.List;
+import ru.yandex.practicum.utils.Utils;
+
+import java.time.LocalDateTime;
+
+import static java.time.Month.*;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager manager = Managers.getDefault();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new Utils.LocalDateTimeAdapter())
+                .create();
+        Task task1 = new Task("Read book every day", "30 pages",
+                LocalDateTime.of(2024, MARCH,28,13, 0), 60);
+        Managers.getDefault().addNewTask(task1);
+        Task task2 = new Task("jump every day", "30 iterations",
+                LocalDateTime.of(2024, APRIL,28,13, 0), 60);
+        Managers.getDefault().addNewTask(task2);
+        Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
+        Managers.getDefault().addNewEpic(epic1);
+        Subtask subtask11 = new Subtask("купить билеты", "дешёвые билеты", epic1.getID(),
+                LocalDateTime.of(2023, AUGUST,28,13, 0), 60);
+        Managers.getDefault().addNewSubtask(subtask11);
+        Subtask subtask12 = new Subtask("купить одежду", "крутую одежду", epic1.getID(),
+                LocalDateTime.of(2023, SEPTEMBER,28,13, 0), 60);
+        Managers.getDefault().addNewSubtask(subtask12);
+        Epic epic2 = new Epic("посмотреть кино", "обязательно до конца месяца");
+        Managers.getDefault().addNewEpic(epic2);
+        Subtask subtask21 = new Subtask("найти кино", "в хорошем качестве", epic2.getID(),
+                LocalDateTime.of(2023, DECEMBER,28,13, 0), 60);
+        Managers.getDefault().addNewSubtask(subtask21);
 
-        Task task1 = new Task("Покормить кота", "Кормить влажным кормом");
-        manager.generateTask(task1);
+        System.out.println(gson.toJson(task1));
+        System.out.println(gson.toJson(task2));
+        System.out.println(gson.toJson(epic1));
+        System.out.println(gson.toJson(subtask11));
+        System.out.println(gson.toJson(subtask12));
+        System.out.println(gson.toJson(epic2));
+        System.out.println(gson.toJson(subtask21));
 
-        Task task2 = new Task("Помыть посуду", "Помыть тарелки и ложки");
-        manager.generateTask(task2);
-
-
-        Epic epic1 = new Epic("Учеба", "Нужно учиться");
-        int epicId1 = manager.generateEpic(epic1);
-
-
-        Subtask subtask1 = new Subtask("Методы", "Выучить методы", epicId1);
-        manager.generateSubtask(subtask1);
-
-        Subtask subtask2 = new Subtask("Классы", "Выучить классы", epicId1);
-        manager.generateSubtask(subtask2);
-
-        Epic epic2 = new Epic("Дом", "Нужно убраться");
-        int epicId2 = manager.generateEpic(epic2);
-
-        Subtask subtask3 = new Subtask("Уборка", "Мытье полов", epicId2);
-        manager.generateSubtask(subtask3);
-
-
-        manager.getSubtaskByIdentify(5);// 1
-        manager.getSubtaskByIdentify(5);
-        manager.getEpicByIdentify(3);
-        manager.getEpicByIdentify(3);
-        manager.getEpicByIdentify(3);
-        manager.getEpicByIdentify(3);
-        manager.getEpicByIdentify(3);
-        manager.getEpicByIdentify(3);
-        manager.getEpicByIdentify(3);
-        manager.getSubtaskByIdentify(5); // 10
-        manager.getEpicByIdentify(3);
+        String jsonString = gson.toJson(subtask11);
+        Subtask subtaskFromJson = gson.fromJson(jsonString, Subtask.class);
+        System.out.println(subtaskFromJson);
 
 
-
-
-        List<Task> listTask = manager.getHistory();
-        System.out.println(listTask);
     }
 }

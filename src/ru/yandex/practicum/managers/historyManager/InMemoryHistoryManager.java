@@ -1,31 +1,31 @@
 package ru.yandex.practicum.managers.historyManager;
 
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    public Node<Task> head = null;
-    public Node<Task> tail = null;
+    public Node head = null;
+    public Node tail = null;
     private int size = 0;
-    private final Map<Integer, Node<Task>> customLinkedList = new HashMap<>();
+    private final Map<Integer, Node> customLinkedList = new HashMap<>();
 
     @Override
-    public void add(Task task) {
+    public void add(TaskModel task) {
         if (customLinkedList.containsKey(task.getID())) {
             removeNode(customLinkedList.get(task.getID()));
             size -= 1;
         } else {
-            customLinkedList.put(task.getID(), new Node<>(task));
+            customLinkedList.put(task.getID(), new Node(task));
         }
         linkLast(customLinkedList.get(task.getID()));
         size += 1;
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public ArrayList<TaskModel> getHistory() {
         return getTasks();
     }
 
@@ -38,7 +38,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    private void linkLast(Node<Task> node) {
+    private void linkLast(Node node) {
         if (head == null) {
             head = node;
             tail = head;
@@ -50,12 +50,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    private ArrayList<Task> getTasks() {
+    private ArrayList<TaskModel> getTasks() {
         if (size == 0) {
             return null;
         }
-        ArrayList<Task> taskHistory = new ArrayList<>();
-        Node<Task> firstElement = tail;
+        ArrayList<TaskModel> taskHistory = new ArrayList<>();
+        Node firstElement = tail;
         taskHistory.add(firstElement.getData());
         if (size == 1) {
             return taskHistory;
@@ -67,7 +67,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return taskHistory;
     }
 
-    private void removeNode(Node<Task> node) {
+    private void removeNode(Node node) {
         if (head == node && tail == node) {
             head = null;
             tail = null;
@@ -83,38 +83,38 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    public static class Node<Task> {
-        private Task data;
-        private Node<Task> next;
-        private Node<Task> prev;
+    public static class Node {
+        private TaskModel data;
+        private Node next;
+        private Node prev;
 
-        public Node(Task data) {
+        public Node(TaskModel data) {
             this.data = data;
             this.next = null;
             this.prev = null;
         }
 
-        public Task getData() {
+        public TaskModel getData() {
             return data;
         }
 
-        public void setData(Task data) {
+        public void setData(TaskModel data) {
             this.data = data;
         }
 
-        public Node<Task> getNext() {
+        public Node getNext() {
             return next;
         }
 
-        public void setNext(Node<Task> next) {
+        public void setNext(Node next) {
             this.next = next;
         }
 
-        public Node<Task> getPrev() {
+        public Node getPrev() {
             return prev;
         }
 
-        public void setPrev(Node<Task> prev) {
+        public void setPrev(Node prev) {
             this.prev = prev;
         }
     }

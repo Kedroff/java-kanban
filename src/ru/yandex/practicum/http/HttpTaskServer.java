@@ -8,7 +8,7 @@ import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.managers.taskManager.InMemoryTasksManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 import ru.yandex.practicum.utils.Utils;
 
 import java.io.IOException;
@@ -100,10 +100,10 @@ class TasksHandler implements HttpHandler {
             return;
         }
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        Task taskFromJson = gson.fromJson(jsonObject, Task.class);
+        TaskModel taskFromJson = gson.fromJson(jsonObject, TaskModel.class);
 
         if (splitPath.length == 2) {
-            Task newTask = inMemoryTasksManager.addNewTask(taskFromJson);
+            TaskModel newTask = inMemoryTasksManager.addNewTask(taskFromJson);
             if (newTask == null) {
                 HandlerUtils.writeResponse(exchange, "Not Acceptable", 406);
             } else {
@@ -114,7 +114,7 @@ class TasksHandler implements HttpHandler {
             Optional<Integer> taskIdOptional = HandlerUtils.getTaskId(exchange);
             if (taskIdOptional.isPresent()) {
                 if (inMemoryTasksManager.getTaskByID(taskIdOptional.get()) != null) {
-                    Task updateTask = inMemoryTasksManager.updateTask(taskFromJson);
+                    TaskModel updateTask = inMemoryTasksManager.updateTask(taskFromJson);
                     if (updateTask != null) {
                         HandlerUtils.writeResponse(exchange, gson.toJson(updateTask), 200);
                     } else {

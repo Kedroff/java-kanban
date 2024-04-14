@@ -5,7 +5,7 @@ import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.managers.taskManager.FileBackedTasksManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 import ru.yandex.practicum.tasks.TaskStatuses;
 
 import java.io.File;
@@ -19,11 +19,11 @@ class TaskManagerTest {
 
     @Test
     void testGetAllTasks() {
-        ArrayList<Task> taskList = new ArrayList<>();
+        ArrayList<TaskModel> taskList = new ArrayList<>();
         assertEquals(taskList, Managers.getDefault().getAllTasks(), "Пустые листы задач не совпадают");
-        Task task1 = new Task("Read book every day", "30 pages");
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages");
         Managers.getDefault().addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations");
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations");
         Managers.getDefault().addNewTask(task2);
         taskList.add(task1);
         taskList.add(task2);
@@ -33,9 +33,9 @@ class TaskManagerTest {
 
     @Test
     void testDeleteAllTasks() {
-        Task task1 = new Task("Read book every day", "30 pages");
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages");
         Managers.getDefault().addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations");
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations");
         Managers.getDefault().addNewTask(task2);
         Managers.getDefault().deleteAllTasks();
         assertTrue(Managers.getDefault().getAllTasks().isEmpty(), "Задачи не были удалены");
@@ -46,7 +46,7 @@ class TaskManagerTest {
 
     @Test
     void testGetTaskByID() {
-        Task task = new Task("Read book every day", "30 pages");
+        TaskModel task = new TaskModel("Read book every day", "30 pages");
         Managers.getDefault().addNewTask(task);
         assertEquals(task, Managers.getDefault().getTaskByID(task.getID()), "Нужная задача не возвращена");
         assertNull(Managers.getDefault().getTaskByID(task.getID() + 123), "Возврат не null при попытке " +
@@ -58,7 +58,7 @@ class TaskManagerTest {
 
     @Test
     void testAddNewTask() {
-        Task task = new Task("Read book every day", "30 pages");
+        TaskModel task = new TaskModel("Read book every day", "30 pages");
         Managers.getDefault().addNewTask(task);
         assertEquals(task.getID(), Managers.getDefault().getTaskByID(task.getID()).getID(), "В мапу добавлена " +
                 "задача с неверным id");
@@ -67,9 +67,9 @@ class TaskManagerTest {
 
     @Test
     void testUpdateTask() {
-        Task task = new Task("Read book every day", "30 pages");
+        TaskModel task = new TaskModel("Read book every day", "30 pages");
         Managers.getDefault().addNewTask(task);
-        Task updateTask = Managers.getDefault().updateTask(new Task("Read book every day", "30 pages",
+        TaskModel updateTask = Managers.getDefault().updateTask(new TaskModel("Read book every day", "30 pages",
                 TaskStatuses.IN_PROGRESS));
         assertNotEquals(updateTask, task, "Обновленная задача равнf старой версии задачи");
         Managers.getDefault().deleteAllTasks();
@@ -77,8 +77,8 @@ class TaskManagerTest {
 
     @Test
     void testDeleteTaskByID() {
-        Task task1 = new Task("Read book every day", "30 pages");
-        Task task2 = new Task("jump every day", "30 iterations");
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages");
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations");
         Managers.getDefault().addNewTask(task1);
         Managers.getDefault().addNewTask(task2);
         Managers.getDefault().deleteTaskByID(task1.getID());
@@ -278,13 +278,13 @@ class TaskManagerTest {
 
     @Test
     void testTimeFields() {
-        Task task1 = new Task("Read book every day", "30 pages", LocalDateTime.now(), 60);
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages", LocalDateTime.now(), 60);
         Managers.getDefault().addNewTask(task1);
         System.out.println(Managers.getDefault().getTaskByID(task1.getID()).getStartTime());
         System.out.println(Managers.getDefault().getTaskByID(task1.getID()).getDuration());
         System.out.println(Managers.getDefault().getTaskByID(task1.getID()).getEndTime());
 
-        Task task2 = new Task("jump every day", "30 iterations", LocalDateTime.now().plusDays(1), 1440);
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations", LocalDateTime.now().plusDays(1), 1440);
         Managers.getDefault().addNewTask(task2);
         System.out.println(Managers.getDefault().getTaskByID(task2.getID()).getStartTime());
         System.out.println(Managers.getDefault().getTaskByID(task2.getID()).getDuration());
@@ -324,9 +324,9 @@ class TaskManagerTest {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
 
-        Task task1 = new Task("Read book every day", "30 pages", LocalDateTime.now(), 60);
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages", LocalDateTime.now(), 60);
         fileBackedTasksManager1.addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations", LocalDateTime.now(), 1440);
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations", LocalDateTime.now(), 1440);
         fileBackedTasksManager1.addNewTask(task2);
 
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
@@ -363,9 +363,9 @@ class TaskManagerTest {
 
     @Test
     void tryAddNewTaskWhileTimeIsBusy() {
-        Task task1 = new Task("Read book every day", "30 pages", LocalDateTime.of(2024, MAY, 28, 13, 0), 60);
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages", LocalDateTime.of(2024, MAY, 28, 13, 0), 60);
         Managers.getDefault().addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations", LocalDateTime.of(2024, MAY, 28, 13, 0), 1440);
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations", LocalDateTime.of(2024, MAY, 28, 13, 0), 1440);
         Managers.getDefault().addNewTask(task2);
         Managers.getDefault().deleteAllTasks();
 

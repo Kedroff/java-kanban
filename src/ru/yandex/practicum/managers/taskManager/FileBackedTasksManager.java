@@ -23,7 +23,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         try (Writer fileWriter = new FileWriter(file.getPath())) {
             fileWriter.write("id,type,name,status,description,startTime,duration,epic\n");
 
-            for (Map.Entry<Integer, Task> entry : tasksMap.entrySet()) {
+            for (Map.Entry<Integer, TaskModel> entry : tasksMap.entrySet()) {
                 fileWriter.write(entry.getValue().taskToString() + "\n");
             }
             for (Map.Entry<Integer, Epic> entry : epicsMap.entrySet()) {
@@ -41,10 +41,10 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         }
     }
 
-    private Task taskFromString(String value) {
+    private TaskModel taskFromString(String value) {
         String[] line = value.split(",");
         if (line[1].equals(TypeOfTask.TASK.toString())) {
-            Task task = new Task(line[2], line[4], TaskStatuses.valueOf(line[3]),
+            TaskModel task = new TaskModel(line[2], line[4], TaskStatuses.valueOf(line[3]),
                     Utils.formattedTime(LocalDateTime.parse(line[5])), Integer.parseInt(line[6]));
             task.setID(Integer.parseInt(line[0]));
             tasksMap.put(task.getID(), task);
@@ -74,7 +74,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     private static String historyToString(HistoryManager manager) {
         StringBuilder lineOfHistory = new StringBuilder();
-        for (Task task : manager.getHistory()) {
+        for (TaskModel task : manager.getHistory()) {
             lineOfHistory.append(task.getID());
             lineOfHistory.append(",");
         }
@@ -135,8 +135,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     @Override
-    public Task getTaskByID(int id) {
-        Task returnableTask = super.getTaskByID(id);
+    public TaskModel getTaskByID(int id) {
+        TaskModel returnableTask = super.getTaskByID(id);
         save();
         return returnableTask;
     }
@@ -186,15 +186,15 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
     }
 
     @Override
-    public Task addNewTask(Task newTask) {
-        Task returnableTask = super.addNewTask(newTask);
+    public TaskModel addNewTask(TaskModel newTask) {
+        TaskModel returnableTask = super.addNewTask(newTask);
         save();
         return returnableTask;
     }
 
     @Override
-    public Task updateTask(Task newTask) {
-        Task returnableTask = super.updateTask(newTask);
+    public TaskModel updateTask(TaskModel newTask) {
+        TaskModel returnableTask = super.updateTask(newTask);
         save();
         return returnableTask;
     }

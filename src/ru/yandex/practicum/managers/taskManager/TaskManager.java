@@ -2,20 +2,20 @@ package ru.yandex.practicum.managers.taskManager;
 
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 
 import java.util.ArrayList;
 
 public interface TaskManager {
-    ArrayList<Task> getAllTasks();
+    ArrayList<TaskModel> getAllTasks();
 
     void deleteAllTasks();
 
-    Task getTaskByID(int id);
+    TaskModel getTaskByID(int id);
 
-    Task addNewTask(Task newTask);
+    TaskModel addNewTask(TaskModel newTask);
 
-    Task updateTask(Task newTask);
+    TaskModel updateTask(TaskModel newTask);
 
     void deleteTaskByID(int id);
 

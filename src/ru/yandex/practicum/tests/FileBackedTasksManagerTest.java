@@ -5,7 +5,7 @@ import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.managers.taskManager.FileBackedTasksManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -20,13 +20,13 @@ public class FileBackedTasksManagerTest {
     void isWorkingFileBackedTasksManagerStandard() {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
-        Task task1 = new Task("Read book every day", "30 pages",
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages",
                 LocalDateTime.of(2024, MARCH, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations",
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations",
                 LocalDateTime.of(2024, APRIL, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task2);
-        Task task3 = new Task("Eat every day", "3 iterations",
+        TaskModel task3 = new TaskModel("Eat every day", "3 iterations",
                 LocalDateTime.of(2024, MAY, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task3);
 
@@ -60,7 +60,7 @@ public class FileBackedTasksManagerTest {
         fileBackedTasksManager1.getAllEpicSubtasks(epic2.getID());
         fileBackedTasksManager1.deleteTaskByID(task2.getID());
         fileBackedTasksManager1.deleteAllSubtasks();
-        ArrayList<Task> oldHistory = Managers.getDefaultHistory().getHistory();
+        ArrayList<TaskModel> oldHistory = Managers.getDefaultHistory().getHistory();
 
         FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(fileBackedTasksManager1.file);
         assertEquals(fileBackedTasksManager1.getAllTasks(), fileBackedTasksManager2.getAllTasks(), "Исходные " +
@@ -69,7 +69,7 @@ public class FileBackedTasksManagerTest {
                 "эпики не были возвращены");
         assertEquals(fileBackedTasksManager1.getAllSubtasks(), fileBackedTasksManager2.getAllSubtasks(),
                 "Исходные подзадачи не были возвращены");
-        ArrayList<Task> newHistory = Managers.getDefaultHistory().getHistory();
+        ArrayList<TaskModel> newHistory = Managers.getDefaultHistory().getHistory();
         assertEquals(oldHistory, newHistory, "Исходная история не была возвращена");
 
         fileBackedTasksManager1.deleteAllTasks();
@@ -84,7 +84,7 @@ public class FileBackedTasksManagerTest {
     void isWorkingFileBackedTasksManagerWithoutTasks() {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
-        ArrayList<Task> oldHistory = Managers.getDefaultHistory().getHistory();
+        ArrayList<TaskModel> oldHistory = Managers.getDefaultHistory().getHistory();
 
         FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(fileBackedTasksManager1.file);
         assertEquals(fileBackedTasksManager1.getAllTasks(), fileBackedTasksManager2.getAllTasks(), "Исходные " +
@@ -93,7 +93,7 @@ public class FileBackedTasksManagerTest {
                 "эпики не были возвращены");
         assertEquals(fileBackedTasksManager1.getAllSubtasks(), fileBackedTasksManager2.getAllSubtasks(),
                 "Исходные подзадачи не были возвращены");
-        ArrayList<Task> newHistory = Managers.getDefaultHistory().getHistory();
+        ArrayList<TaskModel> newHistory = Managers.getDefaultHistory().getHistory();
         assertEquals(oldHistory, newHistory, "Исходная история не была возвращена");
     }
 
@@ -101,13 +101,13 @@ public class FileBackedTasksManagerTest {
     void isWorkingFileBackedTasksManagerWithEpicsButWithoutSubtasks() {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
-        Task task1 = new Task("Read book every day", "30 pages",
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages",
                 LocalDateTime.of(2024, MAY, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations",
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations",
                 LocalDateTime.of(2024, APRIL, 28, 13, 0), 1440);
         fileBackedTasksManager1.addNewTask(task2);
-        Task task3 = new Task("Eat every day", "3 iterations",
+        TaskModel task3 = new TaskModel("Eat every day", "3 iterations",
                 LocalDateTime.of(2024, AUGUST, 28, 13, 0), 21440);
         fileBackedTasksManager1.addNewTask(task3);
 
@@ -129,7 +129,7 @@ public class FileBackedTasksManagerTest {
 
         fileBackedTasksManager1.getEpicByID(epic2.getID());
         fileBackedTasksManager1.getAllEpicSubtasks(epic2.getID());
-        ArrayList<Task> oldHistory = Managers.getDefaultHistory().getHistory();
+        ArrayList<TaskModel> oldHistory = Managers.getDefaultHistory().getHistory();
 
         FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(fileBackedTasksManager1.file);
         assertEquals(fileBackedTasksManager1.getAllTasks(), fileBackedTasksManager2.getAllTasks(), "Исходные " +
@@ -138,7 +138,7 @@ public class FileBackedTasksManagerTest {
                 "эпики не были возвращены");
         assertEquals(fileBackedTasksManager1.getAllSubtasks(), fileBackedTasksManager2.getAllSubtasks(),
                 "Исходные подзадачи не были возвращены");
-        ArrayList<Task> newHistory = Managers.getDefaultHistory().getHistory();
+        ArrayList<TaskModel> newHistory = Managers.getDefaultHistory().getHistory();
         assertEquals(oldHistory, newHistory, "Исходная история не была возвращена");
     }
 
@@ -146,11 +146,11 @@ public class FileBackedTasksManagerTest {
     void isWorkingFileBackedTasksManagerWithoutHistory() {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
-        Task task1 = new Task("Read book every day", "30 pages");
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages");
         fileBackedTasksManager1.addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations");
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations");
         fileBackedTasksManager1.addNewTask(task2);
-        Task task3 = new Task("Eat every day", "3 iterations");
+        TaskModel task3 = new TaskModel("Eat every day", "3 iterations");
         fileBackedTasksManager1.addNewTask(task3);
 
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");
@@ -182,7 +182,7 @@ public class FileBackedTasksManagerTest {
         fileBackedTasksManager1.deleteAllSubtasks();
         fileBackedTasksManager1.deleteAllTasks();
         fileBackedTasksManager1.deleteAllEpics();
-        ArrayList<Task> oldHistory = Managers.getDefaultHistory().getHistory();
+        ArrayList<TaskModel> oldHistory = Managers.getDefaultHistory().getHistory();
 
         FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(fileBackedTasksManager1.file);
         assertEquals(fileBackedTasksManager1.getAllTasks(), fileBackedTasksManager2.getAllTasks(), "Исходные " +
@@ -191,7 +191,7 @@ public class FileBackedTasksManagerTest {
                 "эпики не были возвращены");
         assertEquals(fileBackedTasksManager1.getAllSubtasks(), fileBackedTasksManager2.getAllSubtasks(),
                 "Исходные подзадачи не были возвращены");
-        ArrayList<Task> newHistory = Managers.getDefaultHistory().getHistory();
+        ArrayList<TaskModel> newHistory = Managers.getDefaultHistory().getHistory();
         assertEquals(oldHistory, newHistory, "Исходная история не была возвращена");
 
         fileBackedTasksManager1.deleteAllTasks();
@@ -206,13 +206,13 @@ public class FileBackedTasksManagerTest {
     void isWorkingFileBackedTasksManagerWithSaveInFile() {
         FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager(
                 new File(System.getProperty("user.dir") + "\\history.txt"));
-        Task task1 = new Task("Read book every day", "30 pages",
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages",
                 LocalDateTime.of(2024, MARCH, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations",
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations",
                 LocalDateTime.of(2024, APRIL, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task2);
-        Task task3 = new Task("Eat every day", "3 iterations",
+        TaskModel task3 = new TaskModel("Eat every day", "3 iterations",
                 LocalDateTime.of(2024, MAY, 28, 13, 0), 60);
         fileBackedTasksManager1.addNewTask(task3);
 

@@ -5,7 +5,7 @@ import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.managers.historyManager.HistoryManager;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 import ru.yandex.practicum.tasks.TaskStatuses;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 public class InMemoryTasksManager implements TaskManager {
-    protected Map<Integer, Task> tasksMap = new HashMap<>();
+    protected Map<Integer, TaskModel> tasksMap = new HashMap<>();
     protected Map<Integer, Epic> epicsMap = new HashMap<>();
     protected Map<Integer, Subtask> subtasksMap = new HashMap<>();
     protected int counterID = 0;
@@ -26,8 +26,8 @@ public class InMemoryTasksManager implements TaskManager {
         this.historyManager = Managers.getDefaultHistory();
     }
 
-    protected boolean isIntersect(Task newTask) {
-        ArrayList<Task> prioritizedTasksList = new ArrayList<>(getPrioritizedTasks());
+    protected boolean isIntersect(TaskModel newTask) {
+        ArrayList<TaskModel> prioritizedTasksList = new ArrayList<>(getPrioritizedTasks());
 
         if (!prioritizedTasksList.isEmpty()) {
             if (newTask.getEndTime().isBefore(prioritizedTasksList.get(0).getStartTime()) ||
@@ -50,14 +50,14 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getAllTasks() {
+    public ArrayList<TaskModel> getAllTasks() {
         return new ArrayList<>(tasksMap.values());
     }
 
     @Override
     public void deleteAllTasks() {
         if (!tasksMap.isEmpty()) {
-            for (Map.Entry<Integer, Task> entry : tasksMap.entrySet()) {
+            for (Map.Entry<Integer, TaskModel> entry : tasksMap.entrySet()) {
                 historyManager.remove(entry.getKey());
             }
 
@@ -66,7 +66,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskByID(int id) {
+    public TaskModel getTaskByID(int id) {
         if (tasksMap.containsKey(id)) {
             historyManager.add(tasksMap.get(id));
             return tasksMap.get(id);
@@ -75,7 +75,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public Task addNewTask(Task newTask) {
+    public TaskModel addNewTask(TaskModel newTask) {
         if (newTask.getStartTime() != null) {
             try {
                 if (isIntersect(newTask)) {
@@ -94,9 +94,9 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     @Override
-    public Task updateTask(Task newTask) {
+    public TaskModel updateTask(TaskModel newTask) {
         if (newTask.getStartTime() != null) {
-            Task oldTask = tasksMap.get(newTask.getID());
+            TaskModel oldTask = tasksMap.get(newTask.getID());
             tasksMap.remove(newTask.getID());
             try {
                 if (isIntersect(newTask)) {
@@ -297,8 +297,8 @@ public class InMemoryTasksManager implements TaskManager {
                 }).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public ArrayList<Task> getPrioritizedTasks() {
-        TreeSet<Task> priorityList = new TreeSet<>((task1, task2) -> {
+    public ArrayList<TaskModel> getPrioritizedTasks() {
+        TreeSet<TaskModel> priorityList = new TreeSet<>((task1, task2) -> {
             if (task1.getStartTime().isAfter(task2.getStartTime())) {
                 return 1;
             } else if (task1.getStartTime().isEqual(task2.getStartTime())) {
@@ -308,7 +308,7 @@ public class InMemoryTasksManager implements TaskManager {
             }
         });
 
-        for (Map.Entry<Integer, Task> entry : tasksMap.entrySet()) {
+        for (Map.Entry<Integer, TaskModel> entry : tasksMap.entrySet()) {
             priorityList.add(entry.getValue());
         }
         for (Map.Entry<Integer, Subtask> entry : subtasksMap.entrySet()) {

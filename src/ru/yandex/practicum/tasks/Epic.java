@@ -5,7 +5,7 @@ import ru.yandex.practicum.utils.Utils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Epic extends Task {
+public class Epic extends TaskModel {
     private ArrayList<Integer> subtasksIds = new ArrayList<>();
     private LocalDateTime endTime = null;
 
@@ -38,7 +38,7 @@ public class Epic extends Task {
 
     @Override
     public String taskToString() {
-        StringBuilder line = new StringBuilder("");
+        StringBuilder line = new StringBuilder();
         line.append(this.getID());
         line.append(",");
         line.append(this.getType());

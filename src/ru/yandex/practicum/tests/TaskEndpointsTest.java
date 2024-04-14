@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.http.HttpTaskServer;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 import ru.yandex.practicum.utils.Utils;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class TaskEndpointsTest {
     @Test
     public void addTaskAndGetItTest() throws IOException, InterruptedException {
         URI uri1 = URI.create(DEFAULT_TASKS_URI);
-        Task task1 = new Task("Read book every day", "30 pages",
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages",
                 LocalDateTime.of(2024, MARCH, 28, 13, 0), 60);
         HttpRequest request1 = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(task1)))
@@ -74,7 +74,7 @@ public class TaskEndpointsTest {
 
     @Test
     public void DeleteTaskTest() throws IOException, InterruptedException {
-        Task task1 = new Task("Read book every day", "30 pages",
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages",
                 LocalDateTime.of(2024, MARCH, 28, 13, 0), 60);
         URI uri1 = URI.create(DEFAULT_TASKS_URI);
         HttpRequest request1 = HttpRequest.newBuilder()

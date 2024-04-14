@@ -1,13 +1,13 @@
 package ru.yandex.practicum.managers.historyManager;
 
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 
 import java.util.ArrayList;
 
 public interface HistoryManager {
-    void add(Task task);
+    void add(TaskModel task);
 
-    public void remove(int id);
+    void remove(int id);
 
-    ArrayList<Task> getHistory();
+    ArrayList<TaskModel> getHistory();
 }

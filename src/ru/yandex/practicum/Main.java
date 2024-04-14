@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import ru.yandex.practicum.managers.Managers;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.tasks.TaskModel;
 import ru.yandex.practicum.utils.Utils;
 
 import java.time.LocalDateTime;
@@ -17,10 +17,10 @@ public class Main {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new Utils.LocalDateTimeAdapter())
                 .create();
-        Task task1 = new Task("Read book every day", "30 pages",
+        TaskModel task1 = new TaskModel("Read book every day", "30 pages",
                 LocalDateTime.of(2024, MARCH, 28, 13, 0), 60);
         Managers.getDefault().addNewTask(task1);
-        Task task2 = new Task("jump every day", "30 iterations",
+        TaskModel task2 = new TaskModel("jump every day", "30 iterations",
                 LocalDateTime.of(2024, APRIL, 28, 13, 0), 60);
         Managers.getDefault().addNewTask(task2);
         Epic epic1 = new Epic("Съездить в Москву", "обязательно до лета");

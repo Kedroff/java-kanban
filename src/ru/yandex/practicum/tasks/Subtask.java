@@ -4,7 +4,7 @@ import ru.yandex.practicum.utils.Utils;
 
 import java.time.LocalDateTime;
 
-public class Subtask extends Task {
+public class Subtask extends TaskModel {
     private int idOfEpic;
 
     public int getIdOfEpic() {
@@ -56,24 +56,23 @@ public class Subtask extends Task {
 
     @Override
     public String taskToString() {
-        StringBuilder line = new StringBuilder("");
-        line.append(this.getID());
-        line.append(",");
-        line.append(this.getType());
-        line.append(",");
-        line.append(this.getName());
-        line.append(",");
-        line.append(this.getStatus());
-        line.append(",");
-        line.append(this.getAdditionalInformation());
-        line.append(",");
-        line.append(this.getStartTime());
-        line.append(",");
-        line.append(this.getDuration());
-        line.append(",");
-        line.append(this.getIdOfEpic());
+        String line = this.getID() +
+                "," +
+                this.getType() +
+                "," +
+                this.getName() +
+                "," +
+                this.getStatus() +
+                "," +
+                this.getAdditionalInformation() +
+                "," +
+                this.getStartTime() +
+                "," +
+                this.getDuration() +
+                "," +
+                this.getIdOfEpic();
 
-        return line.toString();
+        return line;
     }
 
     @Override

@@ -1,0 +1,144 @@
+@startuml
+!define TASKS
+
+class TaskModel {
+    int id
+        String name
+        String additionalInformation
+        TaskStatuses status
+        LocalDateTime startTime
+        int duration
+        LocalDateTime endTime
+        String taskToString()
+        boolean equals(Object o)
+        int hashCode()
+
+}
+
+class Epic extends TaskModel {
+    ArrayList<Integer> subtasksIds
+        LocalDateTime endTime
+        ArrayList<Integer> getSubtasksIds()
+        void setSubtasksIds(ArrayList<Integer> subtasksIds)
+        Epic(String name, String additionalInformation)
+        Epic(String name, String additionalInformation, TaskStatuses taskStatuses, int id)
+        LocalDateTime getEndTime()
+        void setEndTime(LocalDateTime endTime)
+}
+
+class Subtask extends TaskModel {
+     int idOfEpic
+        int getIdOfEpic()
+        void setIdOfEpic(int idOfEpic)
+        Subtask(String name, String additionalInformation, int idOfEpic)
+
+}
+
+enum TypeOfTask {
+TASK
+    EPIC
+    SUBTASK
+}
+
+enum TaskStatuses {
+DONE
+    IN_PROGRESS
+    NEW
+}
+
+class Utils {
+    static LocalDateTime formattedTime(LocalDateTime time)
+    static boolean isNumber(String str)
+}
+
+interface TaskManager {
+}
+
+class InMemoryTasksManager implements TaskManager {
+    Map<Integer, TaskModel> tasksMap
+    Map<Integer, Epic> epicsMap
+    Map<Integer, Subtask> subtasksMap
+    HistoryManager historyManager
+
+    void deleteAllTasks()
+    TaskModel getTaskByID(int id)
+    void deleteTaskByID(int id)
+    void deleteAllSubtasks()
+    Subtask getSubtasksByID(int id)
+    void deleteSubtaskByID(int id)
+    void deleteAllEpics()
+    Epic getEpicByID(int id)
+    void deleteEpicByID(int id)
+    TaskModel addNewTask(TaskModel newTask)
+    TaskModel updateTask(TaskModel newTask)
+    Subtask addNewSubtask(Subtask newSubtask)
+    Subtask updateSubtask(Subtask newSubtask)
+    Epic addNewEpic(Epic newEpic)
+    Epic updateEpic(Epic newEpic)
+}
+
+class FileBackedTasksManager extends InMemoryTasksManager {
+    File file
+
+    FileBackedTasksManager(File file)
+    void save() throws ManagerSaveException
+    TaskModel taskFromString(String value)
+    static String historyToString(HistoryManager manager)
+    static ArrayList<Integer> historyFromString(String value)
+    static FileBackedTasksManager loadFromFile(File file)
+
+    void deleteAllTasks()
+    TaskModel getTaskByID(int id)
+    void deleteTaskByID(int id)
+    void deleteAllSubtasks()
+    Subtask getSubtasksByID(int id)
+    void deleteSubtaskByID(int id)
+    void deleteAllEpics()
+    Epic getEpicByID(int id)
+    void deleteEpicByID(int id)
+    TaskModel addNewTask(TaskModel newTask)
+    TaskModel updateTask(TaskModel newTask)
+    Subtask addNewSubtask(Subtask newSubtask)
+    Subtask updateSubtask(Subtask newSubtask)
+    Epic addNewEpic(Epic newEpic)
+    Epic updateEpic(Epic newEpic)
+}
+
+class HistoryManager {
+    List<TaskModel> getHistory()
+}
+
+class Managers {
+    static HistoryManager getDefaultHistory()
+}
+
+
+class InMemoryHistoryManager implements HistoryManager {
+    Node head
+    Node tail
+    int size
+    Map<Integer, Node> customLinkedList
+
+    void add(TaskModel task)
+    void remove(int id)
+    ArrayList<TaskModel> getHistory()
+    void linkLast(Node node)
+    ArrayList<TaskModel> getTasks()
+    void removeNode(Node node)
+}
+
+FileBackedTasksManager --> InMemoryTasksManager
+InMemoryTasksManager --> HistoryManager
+InMemoryTasksManager --> TaskModel
+InMemoryTasksManager --> Epic
+InMemoryTasksManager --> Subtask
+TaskModel --> TypeOfTask
+TaskModel --> TaskStatuses
+Subtask --> Epic
+FileBackedTasksManager --> Utils
+Managers --> HistoryManager
+InMemoryHistoryManager --> HistoryManager
+InMemoryHistoryManager --> TaskModel
+InMemoryHistoryManager --> FileBackedTasksManager
+InMemoryHistoryManager --> Utils
+@enduml
